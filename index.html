@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finanças · O Tempo Kura</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<script>
+const CHAVE = new URLSearchParams(location.hash.slice(1)).get("k") || "";
+const URL_DADOS = "https://script.google.com/macros/s/AKfycbzya2TbnCDllXp-wSp1WMULsPHJEgEd8lljcBXVpj9n7wP5Ek-UoL7nkhsFzlWypoYGeQ/exec?formato=json&k=" + encodeURIComponent(CHAVE);
+let DADOS = null;
+try { const x = new XMLHttpRequest(); x.open("GET", URL_DADOS, false); x.send(); DADOS = JSON.parse(x.responseText); } catch (e) { DADOS = { erro: "Sem conexão com a planilha" }; }
+if (DADOS.erro) { document.documentElement.innerHTML = "<body style='background:#111;color:#eee;font-family:sans-serif;padding:24px'>" + DADOS.erro + ".</body>"; throw new Error(DADOS.erro); }
+</script>
+<style>
+:root {
+  --grafite: #17191B; --panel: #1E2124; --panel2: #24282B; --concreto: #D4D2CC; --aco: #A9B0B6; --petroleo: #1F3A40; --bronze: #9A7B52; --lume: #BFD8B4;
+  --line: rgba(139,146,152,.22); --alarme: #E0816F; --alarme-bg: rgba(224,129,111,.10);
+  --display: "Atkinson Hyperlegible", "Segoe UI", sans-serif; --body: "Atkinson Hyperlegible", "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--grafite); color: var(--concreto); font: 16px/1.55 var(--body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 22px 16px 110px; display: grid; gap: 16px; }
+header { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-end; }
+.marca { font: 700 11px var(--display); letter-spacing: .3em; text-transform: uppercase; color: var(--bronze); }
+h1 { font: 700 clamp(1.8rem, 4vw, 2.6rem)/1.05 var(--display); letter-spacing: -.02em; margin: 4px 0; }
+.sub { color: var(--aco); font-size: 13.5px; margin: 0; }
+.sub b { color: var(--lume); font-weight: 400; }
+.pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.pills button { font: 700 13px var(--body); color: var(--concreto); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.pills button[aria-pressed="true"] { background: var(--petroleo); border-color: var(--lume); color: #fff; }
+button:focus-visible { outline: 2px solid var(--lume); outline-offset: 2px; }
+
+.cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 900px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.card, .box { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px; min-width: 0; }
+.card .k { color: var(--aco); font-size: 13px; }
+.card .v { font: 700 clamp(1.5rem, 2.6vw, 2rem)/1.15 var(--display); letter-spacing: -.02em; margin: 4px 0 8px; font-variant-numeric: tabular-nums; }
+.card .v.neg { color: var(--concreto); }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font-size: 12px; padding: 2px 8px; border-radius: 6px; background: var(--panel2); color: var(--aco); }
+.tag.lume { color: var(--lume); }
+
+.main { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 12px; }
+@media (max-width: 900px) { .main { grid-template-columns: 1fr; } }
+.col { display: grid; gap: 12px; align-content: start; min-width: 0; }
+h2 { font: 700 15px var(--display); margin: 0 0 12px; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+h2 small { font: 400 12px var(--body); color: var(--aco); }
+
+.proj { background: linear-gradient(135deg, var(--petroleo), var(--panel) 75%); }
+.proj .v { font: 700 clamp(1.3rem, 2.2vw, 1.75rem)/1.15 var(--display); letter-spacing: -.02em; color: var(--lume); }
+.proj .v small { font: 500 14px var(--display); color: var(--concreto); margin-left: 6px; }
+.track { position: relative; height: 12px; border-radius: 6px; background: rgba(255,255,255,.06); margin: 14px 0 6px; }
+.track i { position: absolute; top: 0; bottom: 0; border-radius: 6px; }
+.track .feito { left: 0; background: var(--concreto); }
+.track .faixa { background: repeating-linear-gradient(135deg, rgba(191,216,180,.75) 0 4px, transparent 4px 8px); border: 1px solid rgba(191,216,180,.6); }
+.track .mark { width: 2px; top: -4px; bottom: -4px; background: var(--concreto); border-radius: 0; }
+.legend { display: flex; justify-content: space-between; font-size: 12px; color: var(--aco); gap: 8px; flex-wrap: wrap; }
+
+svg text { font-family: var(--body); }
+.chart svg { width: 100%; height: auto; display: block; }
+.rank { display: grid; gap: 10px; }
+.rank .row { display: grid; grid-template-columns: 9.5em 1fr 5.5em; gap: 10px; align-items: center; font-size: 13.5px; }
+.rank .bar { height: 10px; border-radius: 5px; background: rgba(255,255,255,.06); overflow: hidden; }
+.rank .bar i { display: block; height: 100%; background: var(--aco); border-radius: 5px; }
+.rank .row:first-child .bar i { background: var(--concreto); }
+.rank .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+.alerts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.alerts li { padding: 10px 12px; border-radius: 10px; background: var(--alarme-bg); border: 1px solid rgba(224,129,111,.35); display: grid; gap: 2px; }
+.alerts li .t { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; font-weight: 700; }
+.alerts li .tg { font-size: 11px; font-weight: 700; color: var(--alarme); border: 1px solid currentColor; border-radius: 999px; padding: 0 8px; white-space: nowrap; }
+.alerts li .a { color: var(--aco); font-size: 13px; }
+.alerts li.ok { background: rgba(191,216,180,.07); border-color: rgba(191,216,180,.3); }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 9px 8px; border-top: 1px solid var(--line); vertical-align: top; }
+th { color: var(--aco); font-weight: 400; font-size: 12.5px; border-top: 0; }
+td.r, th.r { text-align: right; }
+.scroll { overflow-x: auto; }
+.pecas { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.peca .id { font: 700 12px var(--display); color: var(--bronze); letter-spacing: .1em; }
+.peca .nome { font: 700 1.35rem/1.15 var(--display); letter-spacing: -.02em; margin: 2px 0; }
+.peca .det { color: var(--aco); font-size: 13px; }
+.peca dl { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; margin: 12px 0 0; font-size: 14px; }
+.peca dt { color: var(--aco); } .peca dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+.peca dd.lume { color: var(--lume); font-weight: 700; }
+.nota { color: var(--aco); font-size: 12.5px; margin: 8px 0 0; }
+
+nav.bottom { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); display: flex; gap: 4px; padding: 6px; background: rgba(30,33,36,.92); border: 1px solid var(--line); border-radius: 999px; backdrop-filter: blur(8px); max-width: calc(100% - 32px); }
+nav.bottom button { font: 700 14px var(--body); color: var(--aco); background: transparent; border: 0; border-radius: 999px; padding: 8px 18px; cursor: pointer; }
+nav.bottom button[aria-current="page"] { background: var(--concreto); color: var(--grafite); }
+[hidden] { display: none !important; }
+ul.lista { list-style: none; margin: 0; padding: 0; }
+ul.lista li { display: grid; gap: 2px; padding: 10px 0; border-top: 1px solid var(--line); }
+ul.lista li:first-child { border-top: 0; padding-top: 0; }
+ul.lista .q { font-size: 12.5px; color: var(--aco); }
+ul.lista .q.atr { color: var(--alarme); }
+@media (max-width: 480px) { .card .v { font-size: 1.3rem; } nav.bottom button { padding: 8px 14px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="marca">O Tempo Kura · Finanças</div>
+      <h1 id="pergunta">Como está a Tempo Kura?</h1>
+      <p class="sub" id="sub"></p>
+    </div>
+    <div class="pills" id="periodo" aria-label="Período"></div>
+  </header>
+
+  <!-- INÍCIO -->
+  <section id="p-inicio" data-pagina="inicio">
+    <div class="cards" id="cards"></div>
+    <div class="main" style="margin-top:12px">
+      <div class="col">
+        <div class="box chart"><h2>Gastos × vendas por mês <small>resultado acumulado na linha</small></h2><div id="grafico"></div></div>
+        <div class="box"><h2>Para onde foi o dinheiro <small>maior → menor</small></h2><div class="rank" id="rank"></div></div>
+      </div>
+      <div class="col">
+        <div class="box proj" id="projBox"></div>
+        <div class="box"><h2>Precisa de atenção <small id="nA"></small></h2><ul class="alerts" id="alerts"></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PEÇAS -->
+  <section id="p-pecas" data-pagina="pecas" hidden>
+    <div class="pecas" id="pecas"></div>
+    <div class="box scroll" style="margin-top:12px"><h2>Lançamentos <small id="nL"></small></h2><table id="lanc"></table></div>
+  </section>
+
+  <!-- SÓCIOS -->
+  <section id="p-plano" data-pagina="plano" hidden>
+    <div class="pecas" id="metas"></div>
+    <div class="main" style="margin-top:12px">
+      <div class="box"><h2>Prazos e entregas <small id="nE"></small></h2><ul class="lista" id="entregas"></ul></div>
+      <div class="box"><h2>Ideias para trabalhar</h2><ul class="lista" id="ideias"></ul></div>
+    </div>
+  </section>
+</div>
+
+<nav class="bottom" aria-label="Páginas">
+  <button type="button" data-ir="inicio" aria-current="page">Início</button>
+  <button type="button" data-ir="pecas">Peças</button>
+  <button type="button" data-ir="plano">Plano</button>
+</nav>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+  const brl = (v, cents) => (v < 0 ? "−" : "") + "R$ " + Math.abs(v).toLocaleString("pt-BR", { minimumFractionDigits: cents ? 2 : 0, maximumFractionDigits: cents ? 2 : 0 });
+  const mesKey = (d) => d.slice(0, 7);
+  const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+  const mesNome = (k) => { const [y, m] = k.split("-"); return `${MESES[+m - 1]}/${y.slice(2)}`; };
+  const hoje = new Date(), hojeKey = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}`;
+  let L, P, meses;
+  const soma = (arr) => arr.reduce((s, x) => s + x.valor, 0);
+  const custoPeca = (id) => soma(L.filter((x) => x.tipo === "Gasto" && x.peca === id));
+  const vendaPeca = (id) => soma(L.filter((x) => x.tipo === "Receita" && x.peca === id));
+
+  function usar(d) {
+    DADOS = d; L = d.lancamentos; P = d.pecas; meses = [];
+    // meses do primeiro lançamento até hoje
+    const ini = L.map((x) => mesKey(x.data)).sort()[0] || hojeKey; let [y, m] = ini.split("-").map(Number);
+    while (`${y}-${String(m).padStart(2, "0")}` <= hojeKey) { meses.push(`${y}-${String(m).padStart(2, "0")}`); if (++m > 12) { m = 1; y++; } }
+  }
+  usar(DADOS);
+
+  let periodo = "tudo";
+  const PERGUNTAS = { inicio: "Como está a Tempo Kura?", pecas: "Quanto vale o estoque e quanto pode render?", plano: "O que vem pela frente?" };
+
+  function pills() {
+    const box = $("periodo"); box.textContent = "";
+    for (const [k, nome] of [["tudo", "Desde o início"], ...meses.slice(-3).reverse().map((m) => [m, mesNome(m)])]) {
+      const b = el("button", null, nome); b.type = "button"; b.setAttribute("aria-pressed", String(k === periodo));
+      b.onclick = () => { periodo = k; render(); }; box.appendChild(b);
+    }
+  }
+  const noPeriodo = (x) => periodo === "tudo" || mesKey(x.data) === periodo;
+  const anterior = () => { const i = meses.indexOf(periodo); return i > 0 ? meses[i - 1] : null; };
+
+  function card(box, k, v, tags) {
+    const c = el("div", "card"); c.append(el("div", "k", k), el("div", "v", v));
+    const t = el("div", "tags"); for (const [txt, cls] of tags) if (txt) t.append(el("span", "tag " + (cls || ""), txt)); c.append(t); box.appendChild(c);
+  }
+  function variacao(atual, mesAnt) {
+    if (periodo === "tudo" || mesAnt == null) return null;
+    const ant = mesAnt; if (!ant) return atual ? "novo vs " + mesNome(anterior()) : null;
+    const p = Math.round((atual - ant) / ant * 100); return `${p >= 0 ? "▲" : "▼"} ${Math.abs(p)}% vs ${mesNome(anterior())}`;
+  }
+
+  function renderInicio() {
+    const Lp = L.filter(noPeriodo), ant = anterior(), La = ant ? L.filter((x) => mesKey(x.data) === ant) : null;
+    const gastos = soma(Lp.filter((x) => x.tipo === "Gasto")), receitas = soma(Lp.filter((x) => x.tipo === "Receita"));
+    const emEstoque = P.filter((p) => p.status !== "Vendida"), vendidas = P.filter((p) => p.status === "Vendida");
+    const nVend = new Set(Lp.filter((x) => x.tipo === "Receita" && x.peca).map((x) => x.peca)).size; // vendidas no período
+    const parado = emEstoque.reduce((s, p) => s + custoPeca(p.id), 0);
+    const box = $("cards"); box.textContent = "";
+    card(box, "Investido" + (periodo === "tudo" ? "" : " no mês"), brl(gastos), [[La && variacao(gastos, soma(La.filter((x) => x.tipo === "Gasto")))], [Lp.filter((x) => x.tipo === "Gasto").length + " lançamentos"]]);
+    card(box, "Parado em estoque", brl(parado), [[emEstoque.length + (emEstoque.length === 1 ? " peça" : " peças")], ["a preço de custo"]]);
+    card(box, "Vendido" + (periodo === "tudo" ? "" : " no mês"), brl(receitas), [[nVend + (nVend === 1 ? " peça vendida" : " peças vendidas")], [La && variacao(receitas, soma(La.filter((x) => x.tipo === "Receita")))]]);
+    card(box, "Resultado de caixa", brl(receitas - gastos), [["entrou − saiu"], [receitas - gastos < 0 && !vendidas.length ? "normal antes da 1ª venda" : null, "lume"]]);
+
+    // Projeção: se o estoque vender na faixa estimada
+    const pj = $("projBox"); pj.textContent = "";
+    const comFaixa = emEstoque.filter((p) => p.faixa);
+    const min = comFaixa.reduce((s, p) => s + p.faixa[0], 0), max = comFaixa.reduce((s, p) => s + p.faixa[1], 0);
+    const custoFaixa = comFaixa.reduce((s, p) => s + custoPeca(p.id), 0);
+    pj.append(el("h2", null, "Se o estoque vender na faixa estimada"));
+    if (!comFaixa.length) pj.append(el("p", "nota", "Nenhuma peça em estoque com faixa de preço estimada."));
+    else {
+      const v = el("div", "v", `${brl(min - custoFaixa)} a ${brl(max - custoFaixa)}`); v.append(el("small", null, "de lucro")); pj.append(v);
+      pj.append(el("div", "legend", `Venda de ${brl(min)} a ${brl(max)} · custo ${brl(custoFaixa)} · margem ${Math.round((min - custoFaixa) / min * 100)}% a ${Math.round((max - custoFaixa) / max * 100)}%`));
+      const topo = max * 1.05, pc = (x) => (x / topo * 100) + "%", tr = el("div", "track");
+      const f = el("i", "feito"); f.style.width = pc(custoFaixa); f.title = "custo"; tr.append(f);
+      const fx = el("i", "faixa"); fx.style.left = pc(min); fx.style.width = `calc(${pc(max)} - ${pc(min)})`; fx.title = "faixa de venda estimada"; tr.append(fx);
+      pj.append(tr);
+      const lg = el("div", "legend"); lg.append(el("span", null, "▮ custo"), el("span", null, "▨ faixa de venda estimada")); pj.append(lg);
+      pj.append(el("p", "nota", `${comFaixa.length} ${comFaixa.length === 1 ? "peça" : "peças"} · estimativa de 01/11, antes da avaliação do relojoeiro. Não inclui custos indiretos nem taxas.`));
+    }
+
+    renderGrafico(); renderRank(Lp); renderAlertas();
+  }
+
+  function renderGrafico() {
+    const W = 640, H = 240, pad = { l: 56, r: 12, t: 16, b: 28 };
+    const dados = meses.map((m) => { const lm = L.filter((x) => mesKey(x.data) === m); return { m, g: soma(lm.filter((x) => x.tipo === "Gasto")), r: soma(lm.filter((x) => x.tipo === "Receita")) }; });
+    let acc = 0; for (const d of dados) { acc += d.r - d.g; d.acc = acc; }
+    const maxV = Math.max(1, ...dados.map((d) => Math.max(d.g, d.r))), minAcc = Math.min(0, ...dados.map((d) => d.acc)), maxAcc = Math.max(0, ...dados.map((d) => d.acc));
+    const top = Math.max(maxV, maxAcc), bot = minAcc;
+    const y = (v) => pad.t + (top - v) / (top - bot || 1) * (H - pad.t - pad.b);
+    const bw = Math.min(56, (W - pad.l - pad.r) / dados.length / 2.6), x0 = (i) => pad.l + (i + .5) * (W - pad.l - pad.r) / dados.length;
+    const NS = "http://www.w3.org/2000/svg", svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("role", "img"); svg.setAttribute("aria-label", "Gastos e vendas por mês");
+    const add = (n, a, txt) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; svg.appendChild(e); return e; };
+    for (const v of [bot, 0, top].filter((v, i, a) => a.indexOf(v) === i)) { add("line", { x1: pad.l, x2: W - pad.r, y1: y(v), y2: y(v), stroke: v === 0 ? "#8B9298" : "rgba(139,146,152,.2)" }); add("text", { x: pad.l - 8, y: y(v) + 4, "text-anchor": "end", fill: "#8B9298", "font-size": 11 }, brl(v)); }
+    dados.forEach((d, i) => {
+      const sel = periodo === d.m;
+      add("rect", { x: x0(i) - bw - 2, y: y(d.g), width: bw, height: Math.max(0, y(0) - y(d.g)), rx: 3, fill: sel || periodo === "tudo" ? "#D4D2CC" : "rgba(212,210,204,.35)" }).append(Object.assign(document.createElementNS(NS, "title"), { textContent: `Gastos ${mesNome(d.m)}: ${brl(d.g, true)}` }));
+      add("rect", { x: x0(i) + 2, y: y(d.r), width: bw, height: Math.max(0, y(0) - y(d.r)), rx: 3, fill: "#BFD8B4" }).append(Object.assign(document.createElementNS(NS, "title"), { textContent: `Vendas ${mesNome(d.m)}: ${brl(d.r, true)}` }));
+      add("text", { x: x0(i), y: H - 8, "text-anchor": "middle", fill: sel ? "#D4D2CC" : "#8B9298", "font-size": 12, "font-weight": sel ? 700 : 400 }, mesNome(d.m));
+    });
+    add("polyline", { points: dados.map((d, i) => `${x0(i)},${y(d.acc)}`).join(" "), fill: "none", stroke: "#9A7B52", "stroke-width": 2, "stroke-dasharray": "5 4" });
+    dados.forEach((d, i) => add("circle", { cx: x0(i), cy: y(d.acc), r: 3.5, fill: "#9A7B52" }).append(Object.assign(document.createElementNS(NS, "title"), { textContent: `Acumulado até ${mesNome(d.m)}: ${brl(d.acc, true)}` })));
+    const box = $("grafico"); box.textContent = ""; box.appendChild(svg);
+    const lg = el("div", "legend"); lg.style.marginTop = "6px"; lg.append(el("span", null, "▮ gastos (concreto)"), el("span", null, "▮ vendas (verde)"), el("span", null, "┄ resultado acumulado (bronze)")); box.appendChild(lg);
+  }
+
+  function renderRank(Lp) {
+    const por = {}; for (const x of Lp.filter((x) => x.tipo === "Gasto")) por[x.categoria] = (por[x.categoria] || 0) + x.valor;
+    const rows = Object.entries(por).sort((a, b) => b[1] - a[1]), max = rows[0] ? rows[0][1] : 1, box = $("rank"); box.textContent = "";
+    const top = rows.slice(0, 5); if (rows.length > 5) top.push(["Outros", rows.slice(5).reduce((s, r) => s + r[1], 0)]);
+    if (!top.length) { box.append(el("p", "nota", "Nenhum gasto neste período.")); return; }
+    for (const [cat, v] of top) { const r = el("div", "row"), b = el("div", "bar"), i = el("i"); i.style.width = (v / max * 100) + "%"; b.append(i); r.append(el("span", null, cat), b, el("span", "num", brl(v, true))); box.append(r); }
+  }
+
+  function alertas() {
+    const out = DADOS.avisos.map((a) => ({ tag: a.tag, t: a.texto, a: a.acao }));
+    for (const e of DADOS.plano.entregas) if (e.prazo) { const d = diasAte(e.prazo); if (d <= 3) out.push({ tag: "prazo", t: e.texto, a: d < 0 ? `atrasada há ${-d} dias` : d === 0 ? "é hoje" : `faltam ${d} dias` }); }
+    const semPreco = P.filter((p) => p.status !== "Vendida" && !p.venda);
+    if (semPreco.length) out.push({ tag: "preço", t: `${semPreco.length} ${semPreco.length === 1 ? "peça sem preço de venda" : "peças sem preço de venda"}`, a: "Avaliação do relojoeiro → definir o preço." });
+    for (const p of P.filter((p) => p.status === "Em estoque")) { const d = Math.floor((hoje - new Date(p.compra + "T12:00")) / 86400000); if (d > 60) out.push({ tag: "estoque", t: `${p.nome} parado há ${d} dias`, a: "Rever preço ou divulgação." }); }
+    return out.slice(0, 3);
+  }
+  function renderAlertas() {
+    const ul = $("alerts"); ul.textContent = ""; const al = alertas(); $("nA").textContent = al.length ? al.length + "" : "";
+    if (!al.length) { const li = el("li", "ok"); li.append(el("span", "t", "Tudo dentro do normal.")); ul.append(li); return; }
+    for (const a of al) { const li = el("li"), t = el("span", "t"); t.append(el("span", null, a.t), el("span", "tg", a.tag)); li.append(t, el("span", "a", a.a)); ul.append(li); }
+  }
+
+  function renderPecas() {
+    const box = $("pecas"); box.textContent = "";
+    for (const p of P) {
+      const c = el("article", "box peca"), custo = custoPeca(p.id), venda = vendaPeca(p.id) || p.venda;
+      const dias = Math.floor((hoje - new Date(p.compra + "T12:00")) / 86400000);
+      c.append(el("div", "id", `${p.id} · ${p.status}`), el("div", "nome", p.nome), el("div", "det", p.detalhes));
+      const dl = el("dl"), linha = (k, v, cls) => { dl.append(el("dt", null, k), el("dd", cls, v)); };
+      for (const x of L.filter((x) => x.peca === p.id && x.tipo === "Gasto")) linha(x.categoria, brl(x.valor, true));
+      linha("Custo total", brl(custo, true));
+      if (venda) { linha("Vendida por", brl(venda, true)); linha("Lucro real", brl(venda - custo, true), "lume"); }
+      else if (p.faixa) { linha("Faixa estimada", `${brl(p.faixa[0])} a ${brl(p.faixa[1])}`); linha("Lucro estimado", `${brl(p.faixa[0] - custo)} a ${brl(p.faixa[1] - custo)}`, "lume"); }
+      linha("Comprada em", p.compra.split("-").reverse().join("/") + (p.status !== "Vendida" ? ` · ${dias} dias` : ""));
+      c.append(dl); box.append(c);
+    }
+    const t = $("lanc"); t.textContent = ""; $("nL").textContent = L.length + " linhas";
+    const hr = el("tr"); for (const [h, r] of [["Data"], ["Categoria"], ["Descrição"], ["Peça"], ["Valor", 1]]) hr.append(el("th", r ? "r" : null, h)); t.append(hr);
+    for (const x of [...L].sort((a, b) => b.data.localeCompare(a.data))) { const tr = el("tr"); tr.append(el("td", null, x.data.split("-").reverse().join("/")), el("td", null, x.categoria), el("td", null, x.descricao), el("td", null, x.peca || "indireto"), el("td", "r", (x.tipo === "Receita" ? "+" : "−") + brl(x.valor, true).replace("−", ""))); t.append(tr); }
+  }
+
+  function diasAte(iso) { const [y, m, d] = iso.split("-").map(Number); const h = new Date(); h.setHours(0, 0, 0, 0); return Math.round((new Date(y, m - 1, d) - h) / 86400000); }
+  const dataBR = (iso) => iso.split("-").reverse().join("/");
+
+  function renderPlano() {
+    const box = $("metas"); box.textContent = "";
+    for (const m of DADOS.plano.metas) {
+      const atual = m.atual === "vendidas" ? P.filter((p) => p.status === "Vendida").length : m.atual;
+      const dias = diasAte(m.prazo), c = el("article", "box peca");
+      c.append(el("div", "id", `Meta · até ${dataBR(m.prazo)}`), el("div", "nome", m.titulo));
+      c.append(el("div", "v", atual == null ? "sem número" : `${atual} de ${m.alvo}`));
+      c.lastChild.style.cssText = "font:700 1.6rem/1.2 var(--display);letter-spacing:-.02em;margin:6px 0";
+      const tr = el("div", "track"), f = el("i", "feito"); f.style.width = (atual ? Math.min(100, atual / m.alvo * 100) : 0) + "%"; tr.append(f); c.append(tr);
+      const meses = Math.max(1, dias / 30), falta = Math.max(0, m.alvo - (atual || 0));
+      const lg = el("div", "legend"); lg.append(el("span", null, dias >= 0 ? `faltam ${dias} dias` : `prazo passou há ${-dias} dias`), el("span", null, atual == null ? "atualizar o número" : `≈ ${Math.ceil(falta / meses)} ${m.unidade} por mês`)); c.append(lg);
+      box.append(c);
+    }
+    const ul = $("entregas"); ul.textContent = "";
+    const ent = [...DADOS.plano.entregas].sort((a, b) => (a.prazo || "9") .localeCompare(b.prazo || "9"));
+    $("nE").textContent = ent.length + " itens";
+    for (const e of ent) {
+      const li = el("li"), quando = e.prazo ? (() => { const d = diasAte(e.prazo); return `${dataBR(e.prazo)} · ${d < 0 ? "atrasada" : d === 0 ? "hoje" : "em " + d + " dias"}`; })() : e.quando;
+      li.append(el("span", null, e.texto), el("span", "q" + (e.prazo && diasAte(e.prazo) < 0 ? " atr" : ""), quando)); ul.append(li);
+    }
+    const ui = $("ideias"); ui.textContent = "";
+    for (const t of DADOS.plano.ideias) ui.append(el("li", null, t));
+  }
+
+  let pagina = "inicio";
+  for (const b of document.querySelectorAll("nav.bottom button")) b.onclick = () => { pagina = b.dataset.ir; render(); window.scrollTo(0, 0); };
+
+  function render() {
+    for (const s of document.querySelectorAll("[data-pagina]")) s.hidden = s.dataset.pagina !== pagina;
+    for (const b of document.querySelectorAll("nav.bottom button")) b.toggleAttribute("aria-current", b.dataset.ir === pagina), b.dataset.ir === pagina && b.setAttribute("aria-current", "page");
+    $("pergunta").textContent = PERGUNTAS[pagina];
+    const [d, h] = DADOS.atualizadoEm.split(" ");
+    $("sub").innerHTML = ""; $("sub").append(document.createTextNode("Dados de "), Object.assign(el("b"), { textContent: `${d.split("-").reverse().join("/")}, ${h}` }), document.createTextNode(" · " + DADOS.fonte));
+    $("periodo").hidden = pagina !== "inicio";
+    pills();
+    if (pagina === "inicio") renderInicio(); else if (pagina === "pecas") renderPecas(); else renderPlano();
+  }
+  render();
+  // busca a planilha de novo a cada 30 segundos (lançou na planilha, aparece aqui)
+  const buscar = () => fetch(URL_DADOS, { credentials: "omit" }).then((r) => r.json())
+    .then((d) => { if (d.erro) throw new Error(d.erro); usar(d); render(); })
+    .catch((e) => { $("sub").textContent = "Não atualizou: " + (e && e.message || e) + " (tenta de novo em 30 s)"; });
+  setInterval(buscar, 30000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) buscar(); }); // aba voltou para a frente: busca na hora
+})();
+</script>
+</body>
+</html>
