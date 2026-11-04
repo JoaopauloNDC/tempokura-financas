@@ -97,6 +97,64 @@ ul.lista li { display: grid; gap: 2px; padding: 10px 0; border-top: 1px solid va
 ul.lista li:first-child { border-top: 0; padding-top: 0; }
 ul.lista .q { font-size: 12.5px; color: var(--aco); }
 ul.lista .q.atr { color: var(--alarme); }
+::selection { background: var(--petroleo); color: #fff; }
+.pista { color: var(--aco); font-size: 13.5px; margin: 0 0 4px; max-width: 70ch; }
+
+/* Foco agora: o que precisa ser visto primeiro em cada página */
+.foco h2 { margin-bottom: 10px; }
+.foco ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.foco li { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; display: grid; gap: 3px; align-content: start; }
+.foco li .t { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; font-weight: 700; }
+.foco li .tg { font-size: 11px; font-weight: 700; color: var(--aco); border: 1px solid currentColor; border-radius: 999px; padding: 0 8px; white-space: nowrap; }
+.foco li .a { color: var(--aco); font-size: 13px; }
+.foco li.urg { background: var(--alarme-bg); border-color: rgba(224,129,111,.35); }
+.foco li.urg .tg, .foco li.urg .a { color: var(--alarme); }
+.foco li.ok { background: rgba(191,216,180,.07); border-color: rgba(191,216,180,.3); }
+
+/* Abre e fecha ao tocar */
+details > summary { cursor: pointer; list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+summary:focus-visible { outline: 2px solid var(--lume); outline-offset: 3px; border-radius: 8px; }
+.seta { display: inline-block; width: 8px; height: 8px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform .2s cubic-bezier(.2,.8,.2,1); flex: none; }
+details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
+.mais > summary { display: flex; justify-content: space-between; align-items: center; gap: 8px; font: 700 15px var(--display); }
+.mais > summary small { font: 400 12px var(--body); color: var(--aco); margin-left: 8px; }
+.mais { align-self: start; }
+.mais[open] > summary { margin-bottom: 12px; }
+.peca > summary { display: grid; gap: 2px; }
+.peca .resumo { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 14px; }
+.peca .resumo b { color: var(--lume); font-variant-numeric: tabular-nums; }
+.peca .resumo .dica { color: var(--aco); font-size: 12.5px; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.peca .foto { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; background: var(--panel2); margin-bottom: 12px; }
+.peca a.fotos { color: var(--lume); font-size: 13px; text-underline-offset: 3px; display: inline-block; margin-top: 10px; }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.sw.linha { height: 0; border-top: 2px dashed var(--bronze); border-radius: 0; vertical-align: 3px; width: 14px; }
+.sw.listra { background: repeating-linear-gradient(135deg, rgba(191,216,180,.75) 0 2px, transparent 2px 4px); border: 1px solid rgba(191,216,180,.6); }
+.chart rect.alvo { cursor: pointer; }
+.chart rect.alvo:hover { fill: rgba(255,255,255,.04); }
+
+/* Meta com mais de um cenário */
+.cen { display: grid; gap: 6px; margin-top: 10px; }
+.cen div { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; font-size: 13.5px; padding-top: 6px; border-top: 1px solid var(--line); }
+.cen span { color: var(--aco); font-size: 12.5px; }
+.cen .r { text-align: right; }
+
+/* Linha do tempo das fases */
+.fases { display: grid; gap: 6px; --n: 6; }
+.fases .eixo, .fases .fase { display: grid; grid-template-columns: minmax(11em, 16em) repeat(var(--n), minmax(0, 1fr)); gap: 0 4px; align-items: center; }
+.fases .eixo span { font-size: 12px; color: var(--aco); text-align: center; padding-bottom: 2px; border-bottom: 1px solid var(--line); }
+.fases .eixo span.lb { border-bottom: 0; }
+.fases .fase .lb { font-size: 14px; padding-right: 12px; }
+.fases .fase .bar { height: 24px; border-radius: 6px; background: rgba(191,216,180,.14); border: 1px solid rgba(191,216,180,.45); color: var(--lume); font-size: 11.5px; display: flex; align-items: center; padding: 0 8px; white-space: nowrap; overflow: hidden; }
+@media (max-width: 640px) {
+  /* a 1ª coluna (nome) fica com largura zero: o nome vai para a linha de cima e as barras seguem na mesma coluna do mês */
+  .fases .eixo, .fases .fase { grid-template-columns: 0 repeat(var(--n), minmax(0, 1fr)); gap: 0 3px; }
+  .fases .eixo span { font-size: 11px; }
+  .fases .fase .lb { grid-column: 1 / -1; padding: 8px 0 4px; }
+  .fases .fase .bar { grid-row: 2; }
+}
+@media (prefers-reduced-motion: reduce) { .seta { transition: none; } }
+
 @media (max-width: 480px) { .card .v { font-size: 1.3rem; } nav.bottom button { padding: 8px 14px; } }
 </style>
 </head>
@@ -106,6 +164,7 @@ ul.lista .q.atr { color: var(--alarme); }
     <div>
       <div class="marca">O Tempo Kura · Finanças</div>
       <h1 id="pergunta">Como está a Tempo Kura?</h1>
+      <p class="pista" id="pista"></p>
       <p class="sub" id="sub"></p>
     </div>
     <div class="pills" id="periodo" aria-label="Período"></div>
@@ -113,6 +172,7 @@ ul.lista .q.atr { color: var(--alarme); }
 
   <!-- INÍCIO -->
   <section id="p-inicio" data-pagina="inicio">
+    <div class="box foco" id="focoInicio" style="margin-bottom:12px"></div>
     <div class="cards" id="cards"></div>
     <div class="main" style="margin-top:12px">
       <div class="col">
@@ -121,7 +181,6 @@ ul.lista .q.atr { color: var(--alarme); }
       </div>
       <div class="col">
         <div class="box proj" id="projBox"></div>
-        <div class="box"><h2>Precisa de atenção <small id="nA"></small></h2><ul class="alerts" id="alerts"></ul></div>
       </div>
     </div>
   </section>
@@ -129,15 +188,17 @@ ul.lista .q.atr { color: var(--alarme); }
   <!-- PEÇAS -->
   <section id="p-pecas" data-pagina="pecas" hidden>
     <div class="pecas" id="pecas"></div>
-    <div class="box scroll" style="margin-top:12px"><h2>Lançamentos <small id="nL"></small></h2><table id="lanc"></table></div>
+    <details class="box mais" id="lancBox" style="margin-top:12px"><summary><span>Lançamentos <small id="nL"></small></span><span class="seta"></span></summary><div class="scroll"><table id="lanc"></table></div></details>
   </section>
 
-  <!-- SÓCIOS -->
+  <!-- PLANO -->
   <section id="p-plano" data-pagina="plano" hidden>
+    <div class="box foco" id="focoPlano" style="margin-bottom:12px"></div>
     <div class="pecas" id="metas"></div>
+    <div class="box" id="fasesBox" style="margin-top:12px"><h2>Depois da 1ª postagem de produto <small>mês a mês</small></h2><div class="fases" id="fases"></div></div>
     <div class="main" style="margin-top:12px">
-      <div class="box"><h2>Prazos e entregas <small id="nE"></small></h2><ul class="lista" id="entregas"></ul></div>
-      <div class="box"><h2>Ideias para trabalhar</h2><ul class="lista" id="ideias"></ul></div>
+      <div class="box"><h2>Sem data, por prioridade <small id="nE"></small></h2><ul class="lista" id="entregas"></ul></div>
+      <details class="box mais" id="ideiasBox"><summary><span>Ideias para trabalhar <small id="nI"></small></span><span class="seta"></span></summary><ul class="lista" id="ideias"></ul></details>
     </div>
   </section>
 </div>
@@ -161,6 +222,25 @@ ul.lista .q.atr { color: var(--alarme); }
   const soma = (arr) => arr.reduce((s, x) => s + x.valor, 0);
   const custoPeca = (id) => soma(L.filter((x) => x.tipo === "Gasto" && x.peca === id));
   const vendaPeca = (id) => soma(L.filter((x) => x.tipo === "Receita" && x.peca === id));
+  // o que está aberto continua aberto quando os dados chegam de novo (a cada 30 s)
+  const aberto = new Set();
+  const dobra = (det, id) => { det.open = aberto.has(id); det.ontoggle = () => { if (det.open) aberto.add(id); else aberto.delete(id); }; };
+  const sw = (cls, txt) => { const s = el("span"); s.append(el("i", "sw " + cls), document.createTextNode(txt)); return s; };
+  function foco(boxId, titulo, itens, vazio) {
+    const box = $(boxId); box.textContent = ""; box.append(el("h2", null, titulo));
+    const ol = el("ol");
+    if (!itens.length) { const li = el("li", "ok"); li.append(el("span", "t", vazio)); ol.append(li); }
+    for (const it of itens) { const li = el("li", it.urg ? "urg" : null), t = el("span", "t"); t.append(el("span", null, it.t)); if (it.tag) t.append(el("span", "tg", it.tag)); li.append(t); if (it.a) li.append(el("span", "a", it.a)); ol.append(li); }
+    box.append(ol);
+  }
+  // Link das fotos (coluna G da aba Peças): só mostra quando estiver preenchido
+  const linkOk = (u) => /^https:\/\//i.test(u || "");
+  function fotoSrc(u) {
+    if (!linkOk(u)) return null;
+    const id = (u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]{20,})/) || [])[1];
+    if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=w800`;
+    return /\.(jpe?g|png|webp)(\?|$)/i.test(u) ? u : null;
+  }
 
   function usar(d) {
     DADOS = d; L = d.lancamentos; P = d.pecas; meses = [];
@@ -172,10 +252,16 @@ ul.lista .q.atr { color: var(--alarme); }
 
   let periodo = "tudo";
   const PERGUNTAS = { inicio: "Como está a Tempo Kura?", pecas: "Quanto vale o estoque e quanto pode render?", plano: "O que vem pela frente?" };
+  const PISTAS = {
+    inicio: "Em cima, o que pede atenção. Depois, os números do período escolhido. Toque num mês do gráfico para ver só aquele mês.",
+    pecas: "Um cartão por relógio, com custo e lucro esperado. Toque no cartão para ver cada gasto da peça.",
+    plano: "Em cima, o que tem data. Depois, as metas, as fases depois da 1ª postagem e o que vem sem data. Tudo sai da aba Plano da planilha."
+  };
 
   function pills() {
     const box = $("periodo"); box.textContent = "";
-    for (const [k, nome] of [["tudo", "Desde o início"], ...meses.slice(-3).reverse().map((m) => [m, mesNome(m)])]) {
+    const ult = meses.slice(-3).reverse(); if (periodo !== "tudo" && !ult.includes(periodo)) ult.push(periodo);
+    for (const [k, nome] of [["tudo", "Desde o início"], ...ult.map((m) => [m, mesNome(m)])]) {
       const b = el("button", null, nome); b.type = "button"; b.setAttribute("aria-pressed", String(k === periodo));
       b.onclick = () => { periodo = k; render(); }; box.appendChild(b);
     }
@@ -219,11 +305,11 @@ ul.lista .q.atr { color: var(--alarme); }
       const f = el("i", "feito"); f.style.width = pc(custoFaixa); f.title = "custo"; tr.append(f);
       const fx = el("i", "faixa"); fx.style.left = pc(min); fx.style.width = `calc(${pc(max)} - ${pc(min)})`; fx.title = "faixa de venda estimada"; tr.append(fx);
       pj.append(tr);
-      const lg = el("div", "legend"); lg.append(el("span", null, "▮ custo"), el("span", null, "▨ faixa de venda estimada")); pj.append(lg);
+      const lg = el("div", "legend"); lg.append(sw("", "custo"), sw("listra", "faixa de venda estimada")); lg.firstChild.firstChild.style.background = "var(--concreto)"; pj.append(lg);
       pj.append(el("p", "nota", `${comFaixa.length} ${comFaixa.length === 1 ? "peça" : "peças"} · estimativa de 01/11, antes da avaliação do relojoeiro. Não inclui custos indiretos nem taxas.`));
     }
 
-    renderGrafico(); renderRank(Lp); renderAlertas();
+    renderGrafico(); renderRank(Lp); renderFocoInicio();
   }
 
   function renderGrafico() {
@@ -237,8 +323,13 @@ ul.lista .q.atr { color: var(--alarme); }
     const NS = "http://www.w3.org/2000/svg", svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("role", "img"); svg.setAttribute("aria-label", "Gastos e vendas por mês");
     const add = (n, a, txt) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; svg.appendChild(e); return e; };
     for (const v of [bot, 0, top].filter((v, i, a) => a.indexOf(v) === i)) { add("line", { x1: pad.l, x2: W - pad.r, y1: y(v), y2: y(v), stroke: v === 0 ? "#8B9298" : "rgba(139,146,152,.2)" }); add("text", { x: pad.l - 8, y: y(v) + 4, "text-anchor": "end", fill: "#8B9298", "font-size": 11 }, brl(v)); }
+    const col = (W - pad.l - pad.r) / dados.length;
     dados.forEach((d, i) => {
       const sel = periodo === d.m;
+      // área de toque do mês inteiro: filtra a página por aquele mês (toque de novo volta para "Desde o início")
+      const hit = add("rect", { class: "alvo", x: pad.l + i * col, y: pad.t, width: col, height: H - pad.t, fill: sel ? "rgba(255,255,255,.05)" : "transparent" });
+      hit.onclick = () => { periodo = sel ? "tudo" : d.m; render(); };
+      hit.append(Object.assign(document.createElementNS(NS, "title"), { textContent: `${mesNome(d.m)} · gastos ${brl(d.g, true)} · vendas ${brl(d.r, true)}` }));
       add("rect", { x: x0(i) - bw - 2, y: y(d.g), width: bw, height: Math.max(0, y(0) - y(d.g)), rx: 3, fill: sel || periodo === "tudo" ? "#D4D2CC" : "rgba(212,210,204,.35)" }).append(Object.assign(document.createElementNS(NS, "title"), { textContent: `Gastos ${mesNome(d.m)}: ${brl(d.g, true)}` }));
       add("rect", { x: x0(i) + 2, y: y(d.r), width: bw, height: Math.max(0, y(0) - y(d.r)), rx: 3, fill: "#BFD8B4" }).append(Object.assign(document.createElementNS(NS, "title"), { textContent: `Vendas ${mesNome(d.m)}: ${brl(d.r, true)}` }));
       add("text", { x: x0(i), y: H - 8, "text-anchor": "middle", fill: sel ? "#D4D2CC" : "#8B9298", "font-size": 12, "font-weight": sel ? 700 : 400 }, mesNome(d.m));
@@ -246,7 +337,9 @@ ul.lista .q.atr { color: var(--alarme); }
     add("polyline", { points: dados.map((d, i) => `${x0(i)},${y(d.acc)}`).join(" "), fill: "none", stroke: "#9A7B52", "stroke-width": 2, "stroke-dasharray": "5 4" });
     dados.forEach((d, i) => add("circle", { cx: x0(i), cy: y(d.acc), r: 3.5, fill: "#9A7B52" }).append(Object.assign(document.createElementNS(NS, "title"), { textContent: `Acumulado até ${mesNome(d.m)}: ${brl(d.acc, true)}` })));
     const box = $("grafico"); box.textContent = ""; box.appendChild(svg);
-    const lg = el("div", "legend"); lg.style.marginTop = "6px"; lg.append(el("span", null, "▮ gastos (concreto)"), el("span", null, "▮ vendas (verde)"), el("span", null, "┄ resultado acumulado (bronze)")); box.appendChild(lg);
+    for (const r of svg.querySelectorAll("rect:not(.alvo), polyline, circle")) r.style.pointerEvents = "none"; // o toque vai para a área do mês
+    const lg = el("div", "legend"); lg.style.marginTop = "6px"; lg.append(sw("", "gastos"), sw("", "vendas"), sw("linha", "resultado acumulado"));
+    lg.children[0].firstChild.style.background = "#D4D2CC"; lg.children[1].firstChild.style.background = "#BFD8B4"; box.appendChild(lg);
   }
 
   function renderRank(Lp) {
@@ -265,26 +358,42 @@ ul.lista .q.atr { color: var(--alarme); }
     for (const p of P.filter((p) => p.status === "Em estoque")) { const d = Math.floor((hoje - new Date(p.compra + "T12:00")) / 86400000); if (d > 60) out.push({ tag: "estoque", t: `${p.nome} parado há ${d} dias`, a: "Rever preço ou divulgação." }); }
     return out.slice(0, 3);
   }
-  function renderAlertas() {
-    const ul = $("alerts"); ul.textContent = ""; const al = alertas(); $("nA").textContent = al.length ? al.length + "" : "";
-    if (!al.length) { const li = el("li", "ok"); li.append(el("span", "t", "Tudo dentro do normal.")); ul.append(li); return; }
-    for (const a of al) { const li = el("li"), t = el("span", "t"); t.append(el("span", null, a.t), el("span", "tg", a.tag)); li.append(t, el("span", "a", a.a)); ul.append(li); }
+  // próxima entrega com data (a mais perto, ainda não vencida há mais de 30 dias)
+  const proxima = () => DADOS.plano.entregas.filter((e) => e.prazo && diasAte(e.prazo) >= -30).sort((a, b) => a.prazo.localeCompare(b.prazo))[0];
+  const quandoTxt = (d) => d < 0 ? `atrasada há ${-d} ${-d === 1 ? "dia" : "dias"}` : d === 0 ? "é hoje" : `em ${d} ${d === 1 ? "dia" : "dias"}`;
+  function renderFocoInicio() {
+    const itens = alertas().map((a) => ({ t: a.t, a: a.a, tag: a.tag, urg: a.tag === "prazo" }));
+    const px = proxima();
+    if (px && !itens.some((i) => i.t === px.texto)) itens.unshift({ t: px.texto, a: `${dataBR(px.prazo)} · ${quandoTxt(diasAte(px.prazo))}`, tag: "próxima entrega", urg: diasAte(px.prazo) <= 3 });
+    foco("focoInicio", "Foco agora", itens.slice(0, 3), "Tudo dentro do normal.");
   }
 
   function renderPecas() {
     const box = $("pecas"); box.textContent = "";
     for (const p of P) {
-      const c = el("article", "box peca"), custo = custoPeca(p.id), venda = vendaPeca(p.id) || p.venda;
+      const c = el("details", "box peca"), custo = custoPeca(p.id), venda = vendaPeca(p.id) || p.venda;
       const dias = Math.floor((hoje - new Date(p.compra + "T12:00")) / 86400000);
-      c.append(el("div", "id", `${p.id} · ${p.status}`), el("div", "nome", p.nome), el("div", "det", p.detalhes));
+      const s = el("summary"), src = fotoSrc(p.foto);
+      if (src) { const img = el("img", "foto"); img.src = src; img.alt = `Foto do ${p.nome}`; img.loading = "lazy"; img.referrerPolicy = "no-referrer"; img.onerror = () => img.remove(); s.append(img); }
+      s.append(el("div", "id", `${p.id} · ${p.status}`), el("div", "nome", p.nome));
+      // o que importa da peça, sem abrir: quanto custou e quanto deve render
+      const rs = el("div", "resumo"), esq = el("span");
+      if (venda) esq.append(document.createTextNode("Lucro real "), el("b", null, brl(venda - custo)));
+      else if (p.faixa) esq.append(document.createTextNode("Lucro esperado "), el("b", null, `${brl(p.faixa[0] - custo)} a ${brl(p.faixa[1] - custo)}`));
+      else esq.append(document.createTextNode("Custo "), el("b", null, brl(custo)));
+      const dica = el("span", "dica"); dica.append(document.createTextNode("detalhes"), el("span", "seta")); rs.append(esq, dica); s.append(rs);
+      c.append(s, el("div", "det", p.detalhes));
       const dl = el("dl"), linha = (k, v, cls) => { dl.append(el("dt", null, k), el("dd", cls, v)); };
       for (const x of L.filter((x) => x.peca === p.id && x.tipo === "Gasto")) linha(x.categoria, brl(x.valor, true));
       linha("Custo total", brl(custo, true));
       if (venda) { linha("Vendida por", brl(venda, true)); linha("Lucro real", brl(venda - custo, true), "lume"); }
       else if (p.faixa) { linha("Faixa estimada", `${brl(p.faixa[0])} a ${brl(p.faixa[1])}`); linha("Lucro estimado", `${brl(p.faixa[0] - custo)} a ${brl(p.faixa[1] - custo)}`, "lume"); }
       linha("Comprada em", p.compra.split("-").reverse().join("/") + (p.status !== "Vendida" ? ` · ${dias} dias` : ""));
-      c.append(dl); box.append(c);
+      c.append(dl);
+      if (linkOk(p.foto)) { const a = el("a", "fotos", "Ver todas as fotos"); a.href = p.foto; a.target = "_blank"; a.rel = "noopener noreferrer"; c.append(a); }
+      dobra(c, "peca:" + p.id); box.append(c);
     }
+    dobra($("lancBox"), "lanc");
     const t = $("lanc"); t.textContent = ""; $("nL").textContent = L.length + " linhas";
     const hr = el("tr"); for (const [h, r] of [["Data"], ["Categoria"], ["Descrição"], ["Peça"], ["Valor", 1]]) hr.append(el("th", r ? "r" : null, h)); t.append(hr);
     for (const x of [...L].sort((a, b) => b.data.localeCompare(a.data))) { const tr = el("tr"); tr.append(el("td", null, x.data.split("-").reverse().join("/")), el("td", null, x.categoria), el("td", null, x.descricao), el("td", null, x.peca || "indireto"), el("td", "r", (x.tipo === "Receita" ? "+" : "−") + brl(x.valor, true).replace("−", ""))); t.append(tr); }
@@ -294,27 +403,51 @@ ul.lista .q.atr { color: var(--alarme); }
   const dataBR = (iso) => iso.split("-").reverse().join("/");
 
   function renderPlano() {
-    const box = $("metas"); box.textContent = "";
-    for (const m of DADOS.plano.metas) {
-      const atual = m.atual === "vendidas" ? P.filter((p) => p.status === "Vendida").length : m.atual;
-      const dias = diasAte(m.prazo), c = el("article", "box peca");
-      c.append(el("div", "id", `Meta · até ${dataBR(m.prazo)}`), el("div", "nome", m.titulo));
-      c.append(el("div", "v", atual == null ? "sem número" : `${atual} de ${m.alvo}`));
+    const E = DADOS.plano.entregas;
+    // fases: "Mês 1–2 após a 1ª postagem" → começa no mês 1, termina no 2
+    const fase = (q) => { const r = /m[eê]s\s*(\d+)(?:\s*[–-]\s*(\d+))?\s*após/i.exec(q || ""); return r ? [+r[1], +(r[2] || r[1])] : null; };
+    const comData = E.filter((e) => e.prazo).sort((a, b) => a.prazo.localeCompare(b.prazo));
+    const fases = E.filter((e) => !e.prazo && fase(e.quando)), resto = E.filter((e) => !e.prazo && !fase(e.quando));
+
+    // Foco: o que tem data + a 1ª prioridade sem data
+    const itens = comData.map((e) => { const d = diasAte(e.prazo); return { t: e.texto, a: `${dataBR(e.prazo)} · ${quandoTxt(d)}`, tag: "com data", urg: d <= 3 }; });
+    if (resto[0]) itens.push({ t: resto[0].texto, a: resto[0].quando, tag: "prioridade" });
+    foco("focoPlano", "Foco agora", itens.slice(0, 4), "Nada com data marcada.");
+
+    // Metas: mesmo nome com cenários diferentes, ex. "Relógios vendidos (melhor cenário)", viram um cartão só
+    const box = $("metas"); box.textContent = ""; const grupos = new Map();
+    for (const m of DADOS.plano.metas) { const base = m.titulo.replace(/\s*\(([^)]*)\)\s*$/, ""), cen = (m.titulo.match(/\(([^)]*)\)\s*$/) || [])[1] || null; if (!grupos.has(base)) grupos.set(base, []); grupos.get(base).push({ ...m, cen }); }
+    for (const [base, ms] of grupos) {
+      const m0 = ms[0], atual = m0.atual === "vendidas" ? P.filter((p) => p.status === "Vendida").length : m0.atual, alvo = Math.max(...ms.map((m) => m.alvo));
+      const c = el("article", "box peca"); c.append(el("div", "nome", base));
+      c.append(el("div", "v", atual == null ? "sem número" : `${atual} de ${alvo}`));
       c.lastChild.style.cssText = "font:700 1.6rem/1.2 var(--display);letter-spacing:-.02em;margin:6px 0";
-      const tr = el("div", "track"), f = el("i", "feito"); f.style.width = (atual ? Math.min(100, atual / m.alvo * 100) : 0) + "%"; tr.append(f); c.append(tr);
-      const meses = Math.max(1, dias / 30), falta = Math.max(0, m.alvo - (atual || 0));
-      const lg = el("div", "legend"); lg.append(el("span", null, dias >= 0 ? `faltam ${dias} dias` : `prazo passou há ${-dias} dias`), el("span", null, atual == null ? "atualizar o número" : `≈ ${Math.ceil(falta / meses)} ${m.unidade} por mês`)); c.append(lg);
-      box.append(c);
+      const tr = el("div", "track"), f = el("i", "feito"); f.style.width = (atual ? Math.min(100, atual / alvo * 100) : 0) + "%"; tr.append(f); c.append(tr);
+      const cen = el("div", "cen");
+      for (const m of ms.sort((a, b) => a.prazo.localeCompare(b.prazo))) {
+        const dias = diasAte(m.prazo), falta = Math.max(0, m.alvo - (atual || 0)), mesesR = Math.max(1, dias / 30), row = el("div");
+        row.append(el("b", null, m.cen ? m.cen[0].toUpperCase() + m.cen.slice(1) : "Prazo"), el("b", "r", atual == null ? "atualizar o número" : `≈ ${Math.ceil(falta / mesesR)} ${m.unidade} por mês`));
+        row.append(el("span", null, `até ${dataBR(m.prazo)}`), el("span", "r", dias >= 0 ? `faltam ${dias} dias` : `prazo passou há ${-dias} dias`));
+        cen.append(row);
+      }
+      c.append(cen); box.append(c);
     }
-    const ul = $("entregas"); ul.textContent = "";
-    const ent = [...DADOS.plano.entregas].sort((a, b) => (a.prazo || "9") .localeCompare(b.prazo || "9"));
-    $("nE").textContent = ent.length + " itens";
-    for (const e of ent) {
-      const li = el("li"), quando = e.prazo ? (() => { const d = diasAte(e.prazo); return `${dataBR(e.prazo)} · ${d < 0 ? "atrasada" : d === 0 ? "hoje" : "em " + d + " dias"}`; })() : e.quando;
-      li.append(el("span", null, e.texto), el("span", "q" + (e.prazo && diasAte(e.prazo) < 0 ? " atr" : ""), quando)); ul.append(li);
+
+    // Linha do tempo das fases
+    const fb = $("fases"); fb.textContent = ""; $("fasesBox").hidden = !fases.length;
+    const n = Math.max(6, ...fases.map((e) => fase(e.quando)[1])); fb.style.setProperty("--n", n);
+    const eixo = el("div", "eixo"); eixo.append(el("span", "lb")); for (let i = 1; i <= n; i++) eixo.append(el("span", null, "Mês " + i)); fb.append(eixo);
+    for (const e of fases) {
+      const [a, b] = fase(e.quando), row = el("div", "fase"), bar = el("div", "bar", a === b ? `Mês ${a}` : `Mês ${a}–${b}`);
+      bar.style.gridColumn = `${a + 1} / ${b + 2}`; row.append(el("span", "lb", e.texto), bar); fb.append(row);
     }
-    const ui = $("ideias"); ui.textContent = "";
+
+    // Sem data, na ordem da planilha (ordem = prioridade)
+    const ul = $("entregas"); ul.textContent = ""; $("nE").textContent = resto.length + " itens";
+    for (const e of resto) { const li = el("li"); li.append(el("span", null, e.texto), el("span", "q", e.quando)); ul.append(li); }
+    const ui = $("ideias"); ui.textContent = ""; $("nI").textContent = DADOS.plano.ideias.length + "";
     for (const t of DADOS.plano.ideias) ui.append(el("li", null, t));
+    dobra($("ideiasBox"), "ideias");
   }
 
   let pagina = "inicio";
@@ -323,7 +456,7 @@ ul.lista .q.atr { color: var(--alarme); }
   function render() {
     for (const s of document.querySelectorAll("[data-pagina]")) s.hidden = s.dataset.pagina !== pagina;
     for (const b of document.querySelectorAll("nav.bottom button")) b.toggleAttribute("aria-current", b.dataset.ir === pagina), b.dataset.ir === pagina && b.setAttribute("aria-current", "page");
-    $("pergunta").textContent = PERGUNTAS[pagina];
+    $("pergunta").textContent = PERGUNTAS[pagina]; $("pista").textContent = PISTAS[pagina];
     const [d, h] = DADOS.atualizadoEm.split(" ");
     $("sub").innerHTML = ""; $("sub").append(document.createTextNode("Dados de "), Object.assign(el("b"), { textContent: `${d.split("-").reverse().join("/")}, ${h}` }), document.createTextNode(" · " + DADOS.fonte));
     $("periodo").hidden = pagina !== "inicio";
