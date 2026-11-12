@@ -23,7 +23,7 @@ if (DADOS.erro) { document.documentElement.innerHTML = "<body style='background:
 body { margin: 0; background: var(--grafite); color: var(--concreto); font: 16px/1.55 var(--body); }
 .wrap { max-width: 1180px; margin: 0 auto; padding: 22px 16px 110px; display: grid; gap: 16px; }
 header { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-end; }
-.marca { font: 700 11px var(--display); letter-spacing: .3em; text-transform: uppercase; color: var(--bronze); }
+.marca { font: 700 12px var(--display); letter-spacing: .3em; text-transform: uppercase; color: var(--bronze); }
 h1 { font: 700 clamp(1.8rem, 4vw, 2.6rem)/1.05 var(--display); letter-spacing: -.02em; margin: 4px 0; }
 .sub { color: var(--aco); font-size: 13.5px; margin: 0; }
 .sub b { color: var(--lume); font-weight: 400; }
@@ -61,7 +61,7 @@ h2 small { font: 400 12px var(--body); color: var(--aco); }
 svg text { font-family: var(--body); }
 .chart svg { width: 100%; height: auto; display: block; }
 .rank { display: grid; gap: 10px; }
-.rank .row { display: grid; grid-template-columns: 9.5em 1fr 5.5em; gap: 10px; align-items: center; font-size: 13.5px; }
+.rank .row { display: grid; grid-template-columns: 9.5em 1fr auto; gap: 10px; align-items: center; font-size: 13.5px; }
 .rank .bar { height: 10px; border-radius: 5px; background: rgba(255,255,255,.06); overflow: hidden; }
 .rank .bar i { display: block; height: 100%; background: var(--aco); border-radius: 5px; }
 .rank .row:first-child .bar i { background: var(--concreto); }
@@ -70,7 +70,7 @@ svg text { font-family: var(--body); }
 .alerts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .alerts li { padding: 10px 12px; border-radius: 10px; background: var(--alarme-bg); border: 1px solid rgba(224,129,111,.35); display: grid; gap: 2px; }
 .alerts li .t { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; font-weight: 700; }
-.alerts li .tg { font-size: 11px; font-weight: 700; color: var(--alarme); border: 1px solid currentColor; border-radius: 999px; padding: 0 8px; white-space: nowrap; }
+.alerts li .tg { font-size: 12px; font-weight: 700; color: var(--alarme); border: 1px solid currentColor; border-radius: 999px; padding: 0 8px; white-space: nowrap; }
 .alerts li .a { color: var(--aco); font-size: 13px; }
 .alerts li.ok { background: rgba(191,216,180,.07); border-color: rgba(191,216,180,.3); }
 
@@ -105,7 +105,7 @@ ul.lista .q.atr { color: var(--alarme); }
 .foco ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
 .foco li { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; display: grid; gap: 3px; align-content: start; }
 .foco li .t { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; font-weight: 700; }
-.foco li .tg { font-size: 11px; font-weight: 700; color: var(--aco); border: 1px solid currentColor; border-radius: 999px; padding: 0 8px; white-space: nowrap; }
+.foco li .tg { font-size: 12px; font-weight: 700; color: var(--aco); border: 1px solid currentColor; border-radius: 999px; padding: 0 8px; white-space: nowrap; }
 .foco li .a { color: var(--aco); font-size: 13px; }
 .foco li.urg { background: var(--alarme-bg); border-color: rgba(224,129,111,.35); }
 .foco li.urg .tg, .foco li.urg .a { color: var(--alarme); }
@@ -145,17 +145,49 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
 .fases .eixo span { font-size: 12px; color: var(--aco); text-align: center; padding-bottom: 2px; border-bottom: 1px solid var(--line); }
 .fases .eixo span.lb { border-bottom: 0; }
 .fases .fase .lb { font-size: 14px; padding-right: 12px; }
-.fases .fase .bar { height: 24px; border-radius: 6px; background: rgba(191,216,180,.14); border: 1px solid rgba(191,216,180,.45); color: var(--lume); font-size: 11.5px; display: flex; align-items: center; padding: 0 8px; white-space: nowrap; overflow: hidden; }
+.fases .fase .bar { height: 24px; border-radius: 6px; background: rgba(191,216,180,.14); border: 1px solid rgba(191,216,180,.45); color: var(--lume); font-size: 12px; display: flex; align-items: center; padding: 0 8px; white-space: nowrap; overflow: hidden; }
 @media (max-width: 640px) {
   /* a 1ª coluna (nome) fica com largura zero: o nome vai para a linha de cima e as barras seguem na mesma coluna do mês */
   .fases .eixo, .fases .fase { grid-template-columns: 0 repeat(var(--n), minmax(0, 1fr)); gap: 0 3px; }
-  .fases .eixo span { font-size: 11px; }
+  .fases .eixo span { font-size: 12px; }
   .fases .fase .lb { grid-column: 1 / -1; padding: 8px 0 4px; }
   .fases .fase .bar { grid-row: 2; }
 }
 @media (prefers-reduced-motion: reduce) { .seta { transition: none; } }
 
 @media (max-width: 480px) { .card .v { font-size: 1.3rem; } nav.bottom button { padding: 8px 14px; } }
+
+/* Mini-linha dos cartões (aparece com 2 meses ou mais de dado) */
+.spark { display: block; width: 100%; height: 28px; margin: 0 0 8px; overflow: visible; }
+
+/* Chips de alerta */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.chip { font-size: 13px; font-weight: 700; line-height: 1.35; padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(224,129,111,.45); background: var(--alarme-bg); color: var(--alarme); }
+
+/* Leitura do dono */
+.leitura { margin-bottom: 12px; }
+.leitura ol { margin: 0; padding-left: 1.3em; display: grid; gap: 8px; }
+.leitura li { font-size: 15px; }
+.leitura li::marker { color: var(--bronze); font-weight: 700; }
+
+/* Régua dos R$ 100 */
+.regua .pills { margin-bottom: 12px; }
+.regua .pills button { padding: 6px 12px; }
+.regua .barra { display: flex; height: 30px; border-radius: 8px; overflow: hidden; background: rgba(255,255,255,.06); }
+.regua .barra i { display: block; height: 100%; min-width: 2px; }
+.regua dl { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; margin: 12px 0 0; font-size: 14px; font-variant-numeric: tabular-nums; }
+.regua dt { color: var(--aco); } .regua dd { margin: 0; text-align: right; }
+.regua dd b { color: var(--concreto); }
+.regua dd.lume b { color: var(--lume); } .regua dd.neg b { color: var(--alarme); }
+
+/* Gráfico: botões e valor ao tocar */
+.chart .topo { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; }
+.chart .topo h2 { margin: 0; flex-wrap: wrap; justify-content: flex-start; }
+@media (max-width: 480px) { .rank .row { grid-template-columns: minmax(0, 8em) 1fr auto; } }
+.chart .pills button { padding: 6px 12px; }
+
+.tip { margin-top: 8px; background: var(--panel2); border: 1px solid var(--lume); border-radius: 8px; padding: 6px 10px; font-size: 13px; line-height: 1.4; pointer-events: none; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tip b { color: var(--lume); }
 </style>
 </head>
 <body>
@@ -173,16 +205,20 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
   <!-- INÍCIO -->
   <section id="p-inicio" data-pagina="inicio">
     <div class="box foco" id="focoInicio" style="margin-bottom:12px"></div>
+    <div class="chips" id="chips" role="list" aria-label="Alertas"></div>
+    <div class="box leitura" id="leitura"></div>
     <div class="cards" id="cards"></div>
     <div class="main" style="margin-top:12px">
       <div class="col">
-        <div class="box chart"><h2>Gastos × vendas por mês <small>resultado acumulado na linha</small></h2><div id="grafico"></div></div>
+        <div class="box chart"><div class="topo"><h2>Gastos × vendas <small id="grafSub"></small></h2><div class="pills" id="modoGraf" aria-label="Como somar"></div></div><div class="plot" id="grafico"></div></div>
         <div class="box"><h2>Para onde foi o dinheiro <small>maior → menor</small></h2><div class="rank" id="rank"></div></div>
       </div>
       <div class="col">
+        <div class="box regua" id="regua"></div>
         <div class="box proj" id="projBox"></div>
       </div>
     </div>
+    <details class="box mais" id="metodoBox" style="margin-top:12px"><summary><span>Como as contas são feitas</span><span class="seta"></span></summary><ul class="lista" id="metodo"></ul></details>
   </section>
 
   <!-- PEÇAS -->
@@ -211,6 +247,9 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
 
 <script>
 (() => {
+  const MARGEM_MINIMA = 40; // % mínima de margem por peça quando a aba Plano não tem meta "Margem ..."; escolha do Bruce em 12/11 (autorizada pelo João Paulo), mude aqui
+  const DIAS_PARADO = 60; // peça sem vender há mais dias que isto vira alerta; mude aqui
+  // Ideia futura: receita projetada (conservador/otimista) quando houver o prazo médio de venda das peças.
   const $ = (id) => document.getElementById(id);
   const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
   const brl = (v, cents) => (v < 0 ? "−" : "") + "R$ " + Math.abs(v).toLocaleString("pt-BR", { minimumFractionDigits: cents ? 2 : 0, maximumFractionDigits: cents ? 2 : 0 });
@@ -222,6 +261,20 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
   const soma = (arr) => arr.reduce((s, x) => s + x.valor, 0);
   const custoPeca = (id) => soma(L.filter((x) => x.tipo === "Gasto" && x.peca === id));
   const vendaPeca = (id) => soma(L.filter((x) => x.tipo === "Receita" && x.peca === id));
+  const diasDe = (p) => p.compra ? Math.floor((hoje - new Date(p.compra + "T12:00")) / 86400000) : null;
+  const ehCompra = (x) => /aquisi|frete de entrada/i.test(x.categoria); // o resto dos gastos da peça = custos extras
+  const ehMetaMargem = (m) => /^margem/i.test(m.titulo); // meta "Margem ..." na aba Plano, Alvo em %
+  // Conta de uma peça: compra, extras e o preço usado (venda real > preço definido > venda mínima da faixa)
+  function conta(p) {
+    const g = L.filter((x) => x.tipo === "Gasto" && x.peca === p.id), compra = soma(g.filter(ehCompra)), custo = soma(g), vend = vendaPeca(p.id);
+    const real = vend > 0 || (p.status === "Vendida" && p.venda > 0);
+    const preco = vend || p.venda || (p.faixa ? p.faixa[0] : 0);
+    const base = real ? "real" : p.venda ? "preço definido" : p.faixa && p.faixa[0] > 0 ? "estimativa" : null;
+    const porCat = {}; for (const x of g.filter((x) => !ehCompra(x))) porCat[x.categoria] = (porCat[x.categoria] || 0) + x.valor;
+    const maior = Object.entries(porCat).sort((a, b) => b[1] - a[1])[0] || null;
+    return { compra, extras: custo - compra, custo, preco, base, lucro: preco - custo, margem: preco > 0 ? (preco - custo) / preco * 100 : null, maior };
+  }
+  const rotulo = (c) => c.base === "real" ? "" : c.base === "estimativa" ? " (estimativa, na venda mínima da faixa)" : " (no preço definido, ainda não vendida)";
   // o que está aberto continua aberto quando os dados chegam de novo (a cada 30 s)
   const aberto = new Set();
   const dobra = (det, id) => { det.open = aberto.has(id); det.ontoggle = () => { if (det.open) aberto.add(id); else aberto.delete(id); }; };
@@ -253,7 +306,7 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
   let periodo = "tudo";
   const PERGUNTAS = { inicio: "Como está a Tempo Kura?", pecas: "Quanto vale o estoque e quanto pode render?", plano: "O que vem pela frente?" };
   const PISTAS = {
-    inicio: "Em cima, o que pede atenção. Depois, os números do período escolhido. Toque num mês do gráfico para ver só aquele mês.",
+    inicio: "Em cima, o que pede atenção e a leitura dos números. Toque num mês do gráfico para ver o valor exato e só aquele mês.",
     pecas: "Um cartão por relógio, com custo e lucro esperado. Toque no cartão para ver cada gasto da peça.",
     plano: "Em cima, o que tem data. Depois, as metas, as fases depois da 1ª postagem e o que vem sem data. Tudo sai da aba Plano da planilha."
   };
@@ -269,8 +322,29 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
   const noPeriodo = (x) => periodo === "tudo" || mesKey(x.data) === periodo;
   const anterior = () => { const i = meses.indexOf(periodo); return i > 0 ? meses[i - 1] : null; };
 
-  function card(box, k, v, tags) {
+  // mini-linha: um ponto por mês; só com 2 meses ou mais
+  function spark(serie) {
+    const NS = "http://www.w3.org/2000/svg", s = document.createElementNS(NS, "svg"), n = serie.length;
+    s.setAttribute("class", "spark"); s.setAttribute("viewBox", "0 0 100 28"); s.setAttribute("preserveAspectRatio", "none"); s.setAttribute("aria-hidden", "true");
+    const max = Math.max(0, ...serie), min = Math.min(0, ...serie), y = (v) => 26 - (v - min) / (max - min || 1) * 24, x = (i) => i / (n - 1) * 100;
+    const ln = (a) => { const e = document.createElementNS(NS, "polyline"); for (const k in a) e.setAttribute(k, a[k]); e.setAttribute("vector-effect", "non-scaling-stroke"); s.append(e); };
+    if (min < 0) ln({ points: `0,${y(0)} 100,${y(0)}`, stroke: "rgba(139,146,152,.4)", fill: "none" });
+    ln({ points: serie.map((v, i) => `${x(i)},${y(v)}`).join(" "), stroke: "#A9B0B6", "stroke-width": 2, fill: "none" });
+    const i = periodo === "tudo" ? n - 1 : meses.indexOf(periodo); // mês em foco
+    if (i >= 0) ln({ points: `${x(i)},2 ${x(i)},28`, stroke: "rgba(191,216,180,.6)", "stroke-width": 1, fill: "none" });
+    return s;
+  }
+  const serieMes = (tipo) => meses.map((m) => soma(L.filter((x) => x.tipo === tipo && mesKey(x.data) === m)));
+  // média dos meses antes do mês escolhido (precisa de pelo menos 2 meses antes)
+  function vsMedia(atual, serie) {
+    const i = meses.indexOf(periodo); if (periodo === "tudo" || i < 2) return null;
+    const ant = serie.slice(0, i), med = ant.reduce((s, v) => s + v, 0) / ant.length; if (!med) return null;
+    const p = Math.round((atual - med) / med * 100); return `${p >= 0 ? "▲" : "▼"} ${Math.abs(p)}% vs média`;
+  }
+
+  function card(box, k, v, tags, serie) {
     const c = el("div", "card"); c.append(el("div", "k", k), el("div", "v", v));
+    if (serie && serie.length >= 2) c.append(spark(serie));
     const t = el("div", "tags"); for (const [txt, cls] of tags) if (txt) t.append(el("span", "tag " + (cls || ""), txt)); c.append(t); box.appendChild(c);
   }
   function variacao(atual, mesAnt) {
@@ -286,22 +360,24 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
     const nVend = new Set(Lp.filter((x) => x.tipo === "Receita" && x.peca).map((x) => x.peca)).size; // vendidas no período
     const parado = emEstoque.reduce((s, p) => s + custoPeca(p.id), 0);
     const box = $("cards"); box.textContent = "";
-    card(box, "Investido" + (periodo === "tudo" ? "" : " no mês"), brl(gastos), [[La && variacao(gastos, soma(La.filter((x) => x.tipo === "Gasto")))], [Lp.filter((x) => x.tipo === "Gasto").length + " lançamentos"]]);
-    card(box, "Parado em estoque", brl(parado), [[emEstoque.length + (emEstoque.length === 1 ? " peça" : " peças")], ["a preço de custo"]]);
-    card(box, "Vendido" + (periodo === "tudo" ? "" : " no mês"), brl(receitas), [[nVend + (nVend === 1 ? " peça vendida" : " peças vendidas")], [La && variacao(receitas, soma(La.filter((x) => x.tipo === "Receita")))]]);
-    card(box, "Resultado de caixa", brl(receitas - gastos), [["entrou − saiu"], [receitas - gastos < 0 && !vendidas.length ? "normal antes da 1ª venda" : null, "lume"]]);
+    const sG = serieMes("Gasto"), sR = serieMes("Receita"); let acc = 0; const sAcc = sG.map((g, i) => (acc += sR[i] - g));
+    const velha = Math.max(-1, ...emEstoque.map(diasDe).filter((d) => d != null));
+    card(box, "Investido" + (periodo === "tudo" ? "" : " no mês"), brl(gastos), [[La && variacao(gastos, soma(La.filter((x) => x.tipo === "Gasto")))], [vsMedia(gastos, sG)], [Lp.filter((x) => x.tipo === "Gasto").length + " lançamentos"]], sG);
+    card(box, "Parado em estoque", brl(parado), [[emEstoque.length + (emEstoque.length === 1 ? " peça" : " peças")], ["a preço de custo"], [velha >= 0 ? `mais antiga: ${velha} dias` : null]]);
+    card(box, "Vendido" + (periodo === "tudo" ? "" : " no mês"), brl(receitas), [[nVend + (nVend === 1 ? " peça vendida" : " peças vendidas")], [La && variacao(receitas, soma(La.filter((x) => x.tipo === "Receita")))], [vsMedia(receitas, sR)]], sR);
+    card(box, "Resultado de caixa", brl(receitas - gastos), [["entrou − saiu"], [receitas - gastos < 0 && !vendidas.length ? "normal antes da 1ª venda" : null, "lume"]], sAcc);
 
     // Projeção: se o estoque vender na faixa estimada
     const pj = $("projBox"); pj.textContent = "";
-    const comFaixa = emEstoque.filter((p) => p.faixa);
+    const comFaixa = emEstoque.filter((p) => p.faixa && p.faixa[0] > 0 && p.faixa[1] > 0);
     const min = comFaixa.reduce((s, p) => s + p.faixa[0], 0), max = comFaixa.reduce((s, p) => s + p.faixa[1], 0);
     const custoFaixa = comFaixa.reduce((s, p) => s + custoPeca(p.id), 0);
     pj.append(el("h2", null, "Se o estoque vender na faixa estimada"));
     if (!comFaixa.length) pj.append(el("p", "nota", "Nenhuma peça em estoque com faixa de preço estimada."));
     else {
       const v = el("div", "v", `${brl(min - custoFaixa)} a ${brl(max - custoFaixa)}`); v.append(el("small", null, "de lucro")); pj.append(v);
-      pj.append(el("div", "legend", `Venda de ${brl(min)} a ${brl(max)} · custo ${brl(custoFaixa)} · margem ${Math.round((min - custoFaixa) / min * 100)}% a ${Math.round((max - custoFaixa) / max * 100)}%`));
-      const topo = max * 1.05, pc = (x) => (x / topo * 100) + "%", tr = el("div", "track");
+      pj.append(el("div", "legend", `Venda de ${brl(min)} a ${brl(max)} · custo ${brl(custoFaixa)} · margem ${min > 0 ? Math.round((min - custoFaixa) / min * 100) + "%" : "–"} a ${max > 0 ? Math.round((max - custoFaixa) / max * 100) + "%" : "–"}`));
+      const topo = (max * 1.05) || 1, pc = (x) => (x / topo * 100) + "%", tr = el("div", "track");
       const f = el("i", "feito"); f.style.width = pc(custoFaixa); f.title = "custo"; tr.append(f);
       const fx = el("i", "faixa"); fx.style.left = pc(min); fx.style.width = `calc(${pc(max)} - ${pc(min)})`; fx.title = "faixa de venda estimada"; tr.append(fx);
       pj.append(tr);
@@ -309,20 +385,97 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
       pj.append(el("p", "nota", `${comFaixa.length} ${comFaixa.length === 1 ? "peça" : "peças"} · estimativa de 01/11, antes da avaliação do relojoeiro. Não inclui custos indiretos nem taxas.`));
     }
 
-    renderGrafico(); renderRank(Lp); renderFocoInicio();
+    renderGrafico(); renderRank(Lp); renderFocoInicio(); renderChips(); renderLeitura(); renderRegua(); renderMetodo();
   }
 
+  function renderChips() {
+    const out = [], est = P.filter((p) => p.status !== "Vendida");
+    for (const p of est) { const d = diasDe(p); if (d != null && d > DIAS_PARADO) out.push(`${p.id} parado há ${d} dias`); }
+    for (const p of est.filter((p) => p.faixa && p.faixa[0] > 0)) { const c = conta(p); if (c.custo > p.faixa[0]) out.push(`${p.id}: custo ${brl(c.custo)} passou da venda mínima estimada (${brl(p.faixa[0])})`); }
+    const mm = DADOS.plano.metas.find(ehMetaMargem);
+    {
+      const alvo = mm && mm.alvo > 0 ? (mm.alvo <= 1 ? mm.alvo * 100 : mm.alvo) : MARGEM_MINIMA; // aceita 0,4 ou 40
+      for (const p of P) { const c = conta(p); if (c.base && c.margem != null && c.margem < alvo) out.push(`${p.id}: margem ${Math.round(c.margem)}%, abaixo da meta de ${Math.round(alvo)}%${c.base === "real" ? "" : " (estimativa)"}`); }
+    }
+    const box = $("chips"); box.textContent = ""; box.hidden = !out.length;
+    for (const t of out) { const s = el("span", "chip", t); s.setAttribute("role", "listitem"); box.append(s); }
+  }
+
+  // 3 frases tiradas dos números; se faltar dado, a frase não aparece
+  function renderLeitura() {
+    const fr = [], cs = P.map((p) => ({ p, c: conta(p) }));
+    const comM = cs.filter((x) => x.c.base && x.c.margem != null).sort((a, b) => b.c.margem - a.c.margem);
+    if (comM.length) { const { p, c } = comM[0]; fr.push(`${p.nome} ${comM.length > 1 ? "tem a melhor margem" : "tem margem de"}: ${Math.round(c.margem)}%, ${brl(c.lucro)} de lucro${rotulo(c)}.`); }
+    const ex = cs.filter((x) => x.c.extras > 0 && x.c.maior).sort((a, b) => b.c.extras / b.c.custo - a.c.extras / a.c.custo)[0];
+    if (ex) { const { p, c } = ex; fr.push(`${p.nome}: os custos extras somam ${brl(c.extras)}, ${Math.round(c.extras / c.custo * 100)}% do custo da peça. O maior foi ${c.maior[0]} (${brl(c.maior[1])}).`); }
+    const est = cs.filter((x) => x.p.status !== "Vendida" && x.c.custo > 0);
+    if (est.length) {
+      const preso = est.reduce((s, x) => s + x.c.custo, 0), v = est.filter((x) => diasDe(x.p) != null).sort((a, b) => diasDe(b.p) - diasDe(a.p))[0];
+      fr.push(`${brl(preso)} estão presos em ${est.length} ${est.length === 1 ? "peça" : "peças"} sem vender${v ? `; a mais antiga, ${v.p.nome}, foi comprada há ${diasDe(v.p)} dias` : ""}.`);
+    }
+    const box = $("leitura"); box.textContent = ""; box.hidden = !fr.length; if (!fr.length) return;
+    box.append(el("h2", null, "Leitura do dono")); const ol = el("ol"); for (const t of fr) ol.append(el("li", null, t)); box.append(ol);
+  }
+
+  // Régua dos R$ 100: de cada R$ 100 da venda, quanto foi compra, custo extra e lucro
+  let reguaSel = "total";
+  function renderRegua() {
+    const box = $("regua"); box.textContent = "";
+    const h = el("h2", null, "Para onde vai cada R$ 100"); h.append(el("small", null, "da venda")); box.append(h);
+    const comP = P.filter((p) => conta(p).base && conta(p).preco > 0);
+    if (!comP.length) { box.append(el("p", "nota", "Nenhuma peça com venda, preço ou faixa estimada ainda.")); return; }
+    if (reguaSel !== "total" && !comP.some((p) => p.id === reguaSel)) reguaSel = "total";
+    const sel = el("div", "pills"); sel.setAttribute("aria-label", "Escolher peça");
+    for (const [k, nome] of [["total", "Total"], ...comP.map((p) => [p.id, p.id])]) {
+      const b = el("button", null, nome); b.type = "button"; b.setAttribute("aria-pressed", String(k === reguaSel)); b.onclick = () => { reguaSel = k; renderRegua(); }; sel.append(b);
+    }
+    box.append(sel);
+    const cs = (reguaSel === "total" ? comP : comP.filter((p) => p.id === reguaSel)).map(conta);
+    const t = (f) => cs.reduce((s, c) => s + c[f], 0), compra = t("compra"), extras = t("extras"), preco = t("preco"), lucro = preco - compra - extras;
+    const esc = Math.max(preco, compra + extras), r100 = (v) => Math.round(v / preco * 100);
+    const cem = (v, ehLucro) => brl(ehLucro ? 100 - r100(compra) - r100(extras) : r100(v)); // as três partes fecham R$ 100 depois do arredondamento
+    const barra = el("div", "barra"); barra.setAttribute("role", "img");
+    barra.setAttribute("aria-label", `De cada R$ 100: ${cem(compra)} compra e frete, ${cem(extras)} custos extras, ${lucro >= 0 ? cem(lucro, true) + " lucro" : cem(-lucro) + " de prejuízo"}`);
+    for (const [v, cor] of [[compra, "#D4D2CC"], [extras, "#8B9298"], [Math.max(0, lucro), "#BFD8B4"]]) if (v > 0) { const i = el("i"); i.style.width = (v / esc * 100) + "%"; i.style.background = cor; barra.append(i); }
+    box.append(barra);
+    const dl = el("dl"), lin = (k, v, cls, cor, ehLucro) => { const dt = el("dt"); dt.append(sw("", k)); dt.firstChild.firstChild.style.background = cor; const dd = el("dd", cls); dd.append(el("b", null, cem(v, ehLucro)), document.createTextNode(` · ${brl(v)}`)); dl.append(dt, dd); };
+    lin("Compra e frete", compra, null, "#D4D2CC"); lin("Custos extras", extras, null, "#8B9298");
+    if (lucro >= 0) lin("Lucro", lucro, "lume", "#BFD8B4", true); else lin("Prejuízo", -lucro, "neg", "#E0816F");
+    box.append(dl);
+    const so = cs.length === 1 ? cs[0] : null, est = cs.some((c) => c.base !== "real");
+    let n = so ? (so.base === "real" ? "Venda real." : rotulo(so).replace(/^ \((.*)\)$/, "$1") + ".") : est ? "Estimativa: soma vendas reais com a venda mínima da faixa das peças não vendidas." : "Vendas reais.";
+    if (so && so.base === "estimativa") { const p = comP.find((p) => p.id === reguaSel), mx = p.faixa[1]; if (mx > so.preco) n += ` Na venda máxima (${brl(mx)}), o lucro seria ${brl((mx - so.custo) / mx * 100)} de cada R$ 100.`; }
+    box.append(el("p", "nota", n[0].toUpperCase() + n.slice(1) + " Não entram os custos indiretos (sem peça na planilha)."));
+  }
+
+  function renderMetodo() {
+    const ul = $("metodo"); ul.textContent = "";
+    for (const t of [
+      "Custo da peça = soma dos gastos lançados com o ID dela. Compra e frete = categorias \"Aquisição\" e \"Frete de entrada\"; o resto é custo extra.",
+      "Preço usado na régua e na margem: venda real; se não vendeu, o preço de venda da aba Peças; se não houver, a venda mínima da faixa da aba Plano (estimativa).",
+      "Margem = (preço − custo da peça) ÷ preço. Custos indiretos (sem peça) ficam de fora da peça, mas entram em Investido e no Resultado de caixa.",
+      `Alerta de peça parada: mais de ${DIAS_PARADO} dias desde a compra sem vender. Alerta de margem: abaixo da meta "Margem ..." da aba Plano; sem meta lá, vale ${MARGEM_MINIMA}% (margem = lucro ÷ preço de venda).`,
+      "Variação: contra o mês anterior e contra a média dos meses antes dele. A mini-linha aparece com 2 meses ou mais de lançamentos."
+    ]) ul.append(el("li", null, t));
+    dobra($("metodoBox"), "metodo");
+  }
+
+  let modoGraf = "mes";
   function renderGrafico() {
-    const W = 640, H = 240, pad = { l: 56, r: 12, t: 16, b: 28 };
+    const mb = $("modoGraf"); mb.textContent = "";
+    for (const [k, nome] of [["mes", "Mensal"], ["acum", "Acumulado"]]) { const b = el("button", null, nome); b.type = "button"; b.setAttribute("aria-pressed", String(k === modoGraf)); b.onclick = () => { modoGraf = k; renderGrafico(); }; mb.append(b); }
+    $("grafSub").textContent = modoGraf === "mes" ? "por mês · linha = resultado acumulado" : "somado até cada mês · linha = resultado";
+    // largura real da caixa: no celular o texto do eixo fica no tamanho certo, sem encolher
+    const W = Math.max(300, Math.round($("grafico").clientWidth) || 640), H = W < 500 ? 220 : 240, pad = { l: 66, r: 8, t: 16, b: 28 };
     const dados = meses.map((m) => { const lm = L.filter((x) => mesKey(x.data) === m); return { m, g: soma(lm.filter((x) => x.tipo === "Gasto")), r: soma(lm.filter((x) => x.tipo === "Receita")) }; });
-    let acc = 0; for (const d of dados) { acc += d.r - d.g; d.acc = acc; }
+    let acc = 0, ag = 0, ar = 0; for (const d of dados) { acc += d.r - d.g; d.acc = acc; d.mg = d.g; d.mr = d.r; if (modoGraf === "acum") { d.g = ag += d.g; d.r = ar += d.r; } }
     const maxV = Math.max(1, ...dados.map((d) => Math.max(d.g, d.r))), minAcc = Math.min(0, ...dados.map((d) => d.acc)), maxAcc = Math.max(0, ...dados.map((d) => d.acc));
     const top = Math.max(maxV, maxAcc), bot = minAcc;
     const y = (v) => pad.t + (top - v) / (top - bot || 1) * (H - pad.t - pad.b);
     const bw = Math.min(56, (W - pad.l - pad.r) / dados.length / 2.6), x0 = (i) => pad.l + (i + .5) * (W - pad.l - pad.r) / dados.length;
     const NS = "http://www.w3.org/2000/svg", svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("role", "img"); svg.setAttribute("aria-label", "Gastos e vendas por mês");
     const add = (n, a, txt) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; svg.appendChild(e); return e; };
-    for (const v of [bot, 0, top].filter((v, i, a) => a.indexOf(v) === i)) { add("line", { x1: pad.l, x2: W - pad.r, y1: y(v), y2: y(v), stroke: v === 0 ? "#8B9298" : "rgba(139,146,152,.2)" }); add("text", { x: pad.l - 8, y: y(v) + 4, "text-anchor": "end", fill: "#8B9298", "font-size": 11 }, brl(v)); }
+    for (const v of [bot, 0, top].filter((v, i, a) => a.indexOf(v) === i)) { add("line", { x1: pad.l, x2: W - pad.r, y1: y(v), y2: y(v), stroke: v === 0 ? "#8B9298" : "rgba(139,146,152,.2)" }); add("text", { x: pad.l - 8, y: y(v) + 4, "text-anchor": "end", fill: "#A9B0B6", "font-size": 12 }, brl(v)); }
     const col = (W - pad.l - pad.r) / dados.length;
     dados.forEach((d, i) => {
       const sel = periodo === d.m;
@@ -332,12 +485,19 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
       hit.append(Object.assign(document.createElementNS(NS, "title"), { textContent: `${mesNome(d.m)} · gastos ${brl(d.g, true)} · vendas ${brl(d.r, true)}` }));
       add("rect", { x: x0(i) - bw - 2, y: y(d.g), width: bw, height: Math.max(0, y(0) - y(d.g)), rx: 3, fill: sel || periodo === "tudo" ? "#D4D2CC" : "rgba(212,210,204,.35)" }).append(Object.assign(document.createElementNS(NS, "title"), { textContent: `Gastos ${mesNome(d.m)}: ${brl(d.g, true)}` }));
       add("rect", { x: x0(i) + 2, y: y(d.r), width: bw, height: Math.max(0, y(0) - y(d.r)), rx: 3, fill: "#BFD8B4" }).append(Object.assign(document.createElementNS(NS, "title"), { textContent: `Vendas ${mesNome(d.m)}: ${brl(d.r, true)}` }));
-      add("text", { x: x0(i), y: H - 8, "text-anchor": "middle", fill: sel ? "#D4D2CC" : "#8B9298", "font-size": 12, "font-weight": sel ? 700 : 400 }, mesNome(d.m));
+      add("text", { x: x0(i), y: H - 8, "text-anchor": "middle", fill: sel ? "#D4D2CC" : "#A9B0B6", "font-size": 12, "font-weight": sel ? 700 : 400 }, mesNome(d.m));
     });
     add("polyline", { points: dados.map((d, i) => `${x0(i)},${y(d.acc)}`).join(" "), fill: "none", stroke: "#9A7B52", "stroke-width": 2, "stroke-dasharray": "5 4" });
     dados.forEach((d, i) => add("circle", { cx: x0(i), cy: y(d.acc), r: 3.5, fill: "#9A7B52" }).append(Object.assign(document.createElementNS(NS, "title"), { textContent: `Acumulado até ${mesNome(d.m)}: ${brl(d.acc, true)}` })));
     const box = $("grafico"); box.textContent = ""; box.appendChild(svg);
     for (const r of svg.querySelectorAll("rect:not(.alvo), polyline, circle")) r.style.pointerEvents = "none"; // o toque vai para a área do mês
+    // valor exato do mês tocado (o <title> só aparece com mouse)
+    const iSel = dados.findIndex((d) => d.m === periodo);
+    if (iSel >= 0) {
+      const d = dados[iSel], tip = el("div", "tip"), ac = modoGraf === "acum" ? " até aqui" : "";
+      tip.append(el("b", null, mesNome(d.m)), document.createTextNode(` · toque de novo para voltar`), el("br"), document.createTextNode(`Gastos${ac}: ${brl(d.g, true)}`), el("br"), document.createTextNode(`Vendas${ac}: ${brl(d.r, true)}`), el("br"), document.createTextNode(`Resultado acumulado: ${brl(d.acc, true)}`));
+      tip.setAttribute("aria-live", "polite"); box.appendChild(tip); // embaixo do gráfico: não cobre as barras no celular
+    }
     const lg = el("div", "legend"); lg.style.marginTop = "6px"; lg.append(sw("", "gastos"), sw("", "vendas"), sw("linha", "resultado acumulado"));
     lg.children[0].firstChild.style.background = "#D4D2CC"; lg.children[1].firstChild.style.background = "#BFD8B4"; box.appendChild(lg);
   }
@@ -355,7 +515,7 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
     for (const e of DADOS.plano.entregas) if (e.prazo) { const d = diasAte(e.prazo); if (d <= 3) out.push({ tag: "prazo", t: e.texto, a: d < 0 ? `atrasada há ${-d} dias` : d === 0 ? "é hoje" : `faltam ${d} dias` }); }
     const semPreco = P.filter((p) => p.status !== "Vendida" && !p.venda);
     if (semPreco.length) out.push({ tag: "preço", t: `${semPreco.length} ${semPreco.length === 1 ? "peça sem preço de venda" : "peças sem preço de venda"}`, a: "Avaliação do relojoeiro → definir o preço." });
-    for (const p of P.filter((p) => p.status === "Em estoque")) { const d = Math.floor((hoje - new Date(p.compra + "T12:00")) / 86400000); if (d > 60) out.push({ tag: "estoque", t: `${p.nome} parado há ${d} dias`, a: "Rever preço ou divulgação." }); }
+    // peça parada virou chip de alerta (renderChips), com o limite em DIAS_PARADO
     return out.slice(0, 3);
   }
   // próxima entrega com data (a mais perto, ainda não vencida há mais de 30 dias)
@@ -372,7 +532,7 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
     const box = $("pecas"); box.textContent = "";
     for (const p of P) {
       const c = el("details", "box peca"), custo = custoPeca(p.id), venda = vendaPeca(p.id) || p.venda;
-      const dias = Math.floor((hoje - new Date(p.compra + "T12:00")) / 86400000);
+      const dias = p.compra ? Math.floor((hoje - new Date(p.compra + "T12:00")) / 86400000) : null;
       const s = el("summary"), src = fotoSrc(p.foto);
       if (src) { const img = el("img", "foto"); img.src = src; img.alt = `Foto do ${p.nome}`; img.loading = "lazy"; img.referrerPolicy = "no-referrer"; img.onerror = () => img.remove(); s.append(img); }
       s.append(el("div", "id", `${p.id} · ${p.status}`), el("div", "nome", p.nome));
@@ -388,7 +548,7 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
       linha("Custo total", brl(custo, true));
       if (venda) { linha("Vendida por", brl(venda, true)); linha("Lucro real", brl(venda - custo, true), "lume"); }
       else if (p.faixa) { linha("Faixa estimada", `${brl(p.faixa[0])} a ${brl(p.faixa[1])}`); linha("Lucro estimado", `${brl(p.faixa[0] - custo)} a ${brl(p.faixa[1] - custo)}`, "lume"); }
-      linha("Comprada em", p.compra.split("-").reverse().join("/") + (p.status !== "Vendida" ? ` · ${dias} dias` : ""));
+      if (p.compra) linha("Comprada em", p.compra.split("-").reverse().join("/") + (p.status !== "Vendida" ? ` · ${dias} dias` : ""));
       c.append(dl);
       if (linkOk(p.foto)) { const a = el("a", "fotos", "Ver todas as fotos"); a.href = p.foto; a.target = "_blank"; a.rel = "noopener noreferrer"; c.append(a); }
       dobra(c, "peca:" + p.id); box.append(c);
@@ -416,7 +576,7 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
 
     // Metas: mesmo nome com cenários diferentes, ex. "Relógios vendidos (melhor cenário)", viram um cartão só
     const box = $("metas"); box.textContent = ""; const grupos = new Map();
-    for (const m of DADOS.plano.metas) { const base = m.titulo.replace(/\s*\(([^)]*)\)\s*$/, ""), cen = (m.titulo.match(/\(([^)]*)\)\s*$/) || [])[1] || null; if (!grupos.has(base)) grupos.set(base, []); grupos.get(base).push({ ...m, cen }); }
+    for (const m of DADOS.plano.metas.filter((m) => !ehMetaMargem(m))) { const base = m.titulo.replace(/\s*\(([^)]*)\)\s*$/, ""), cen = (m.titulo.match(/\(([^)]*)\)\s*$/) || [])[1] || null; if (!grupos.has(base)) grupos.set(base, []); grupos.get(base).push({ ...m, cen }); }
     for (const [base, ms] of grupos) {
       const m0 = ms[0], atual = m0.atual === "vendidas" ? P.filter((p) => p.status === "Vendida").length : m0.atual, alvo = Math.max(...ms.map((m) => m.alvo));
       const c = el("article", "box peca"); c.append(el("div", "nome", base));
@@ -464,6 +624,7 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
     if (pagina === "inicio") renderInicio(); else if (pagina === "pecas") renderPecas(); else renderPlano();
   }
   render();
+  let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { if (pagina === "inicio") renderGrafico(); }, 200); }); // gráfico acompanha a largura (girar o celular)
   // busca a planilha de novo a cada 30 segundos (lançou na planilha, aparece aqui)
   const buscar = () => fetch(URL_DADOS, { credentials: "omit" }).then((r) => r.json())
     .then((d) => { if (d.erro) throw new Error(d.erro); usar(d); render(); })
