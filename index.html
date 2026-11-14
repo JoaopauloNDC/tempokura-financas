@@ -121,7 +121,6 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
 .mais > summary small { font: 400 12px var(--body); color: var(--aco); margin-left: 8px; }
 .mais { align-self: start; }
 .mais[open] > summary { margin-bottom: 12px; }
-.peca > summary { display: grid; gap: 2px; }
 .peca .resumo { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 14px; }
 .peca .resumo b { color: var(--lume); font-variant-numeric: tabular-nums; }
 .peca .resumo .dica { color: var(--aco); font-size: 12.5px; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
@@ -188,6 +187,40 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
 
 .tip { margin-top: 8px; background: var(--panel2); border: 1px solid var(--lume); border-radius: 8px; padding: 6px 10px; font-size: 13px; line-height: 1.4; pointer-events: none; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .tip b { color: var(--lume); }
+
+/* v15: ajuda, botões, formulários e aviso de gravação */
+.ajuda { position: relative; display: inline-block; font: 400 13px/1.45 var(--body); margin-left: auto; }
+.ajuda > summary { position: relative; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; color: var(--aco); font: 700 14px var(--body); }
+.ajuda > summary::after { content: ""; position: absolute; inset: -8px; } /* área de toque de 46 px */
+.ajuda[open] > summary { border-color: var(--lume); color: var(--lume); }
+.ajuda > p { position: absolute; right: 0; top: 38px; z-index: 5; width: min(320px, calc(100vw - 48px)); margin: 0; padding: 10px 12px; background: var(--panel2); border: 1px solid var(--lume); border-radius: 10px; color: var(--concreto); text-align: left; letter-spacing: 0; text-transform: none; font-weight: 400; white-space: normal; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+.btn { font: 700 14px var(--body); color: var(--concreto); background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; min-height: 44px; min-width: 44px; padding: 0 14px; cursor: pointer; }
+.btn:hover { border-color: var(--aco); }
+.btn.pri { background: var(--petroleo); border-color: var(--lume); color: #fff; }
+.btn.perigo { color: var(--alarme); border-color: rgba(224,129,111,.45); }
+.btn[aria-pressed="true"] { background: var(--concreto); color: var(--grafite); border-color: var(--concreto); }
+.btn:disabled { opacity: .5; cursor: default; }
+.acoes { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+form.edita { display: grid; gap: 10px; margin-top: 10px; padding: 12px; border: 1px solid var(--lume); border-radius: 10px; background: var(--panel2); }
+form.edita label { display: grid; gap: 4px; font-size: 13px; color: var(--aco); }
+form.edita .duas { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+input, select, textarea { font: 16px var(--body); color: var(--concreto); background: var(--grafite); border: 1px solid var(--line); border-radius: 8px; min-height: 44px; padding: 8px 10px; width: 100%; min-width: 0; }
+textarea { min-height: 64px; resize: vertical; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--lume); outline-offset: 1px; }
+.aviso { position: fixed; left: 50%; bottom: 84px; transform: translateX(-50%); z-index: 20; display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 16px; border-radius: 12px; background: var(--panel2); border: 1px solid var(--line); font-size: 14px; max-width: calc(100% - 32px); box-shadow: 0 8px 24px rgba(0,0,0,.45); }
+.aviso.ok { border-color: var(--lume); } .aviso.erro { border-color: var(--alarme); color: var(--alarme); } .aviso.salvando { padding-right: 16px; min-height: 44px; }
+.est { font-size: 12px; font-weight: 700; border: 1px solid currentColor; border-radius: 999px; padding: 0 8px; white-space: nowrap; color: var(--aco); }
+.est.andamento { color: var(--lume); } .est.esperando { color: var(--bronze); } .est.atraso { color: var(--alarme); }
+.pend { display: grid; gap: 4px; }
+.pend .t { display: flex; gap: 8px; align-items: baseline; justify-content: space-between; }
+.estados { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.estados .btn { padding: 0 10px; font-size: 13px; }
+.peca .pd > summary { display: grid; gap: 2px; }
+.foco li .acoes { margin-top: 6px; }
+h2 .ajuda { align-self: center; }
+/* alvo de toque de 44 px também nos botões que já existiam */
+.pills button, nav.bottom button { min-height: 44px; }
+.mais > summary { min-height: 44px; }
 </style>
 </head>
 <body>
@@ -224,21 +257,28 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
   <!-- PEÇAS -->
   <section id="p-pecas" data-pagina="pecas" hidden>
     <div class="pecas" id="pecas"></div>
+    <div class="main" style="margin-top:12px">
+      <div class="box" id="margensBox"></div>
+      <div class="box" id="novoLancBox"></div>
+    </div>
     <details class="box mais" id="lancBox" style="margin-top:12px"><summary><span>Lançamentos <small id="nL"></small></span><span class="seta"></span></summary><div class="scroll"><table id="lanc"></table></div></details>
   </section>
 
   <!-- PLANO -->
   <section id="p-plano" data-pagina="plano" hidden>
     <div class="box foco" id="focoPlano" style="margin-bottom:12px"></div>
+    <div class="box" id="pendBox" style="margin-bottom:12px"><h2>Pendências, por prioridade <small id="nE"></small></h2><div id="pendTopo"></div><ul class="lista" id="entregas"></ul></div>
     <div class="pecas" id="metas"></div>
-    <div class="box" id="fasesBox" style="margin-top:12px"><h2>Depois da 1ª postagem de produto <small>mês a mês</small></h2><div class="fases" id="fases"></div></div>
+    <div class="box" id="inicioBox" style="margin-top:12px"></div>
+    <div class="box" id="fasesBox" style="margin-top:12px"><h2>Depois da 1ª postagem de produto <small id="fasesSub">mês a mês</small></h2><div class="fases" id="fases"></div></div>
     <div class="main" style="margin-top:12px">
-      <div class="box"><h2>Sem data, por prioridade <small id="nE"></small></h2><ul class="lista" id="entregas"></ul></div>
+      <details class="box mais" id="feitasBox"><summary><span>Feitas <small id="nF"></small></span><span class="seta"></span></summary><ul class="lista" id="feitas"></ul></details>
       <details class="box mais" id="ideiasBox"><summary><span>Ideias para trabalhar <small id="nI"></small></span><span class="seta"></span></summary><ul class="lista" id="ideias"></ul></details>
     </div>
   </section>
 </div>
 
+<div class="aviso" id="aviso" role="status" aria-live="polite" hidden></div>
 <nav class="bottom" aria-label="Páginas">
   <button type="button" data-ir="inicio" aria-current="page">Início</button>
   <button type="button" data-ir="pecas">Peças</button>
@@ -264,6 +304,17 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
   const diasDe = (p) => p.compra ? Math.floor((hoje - new Date(p.compra + "T12:00")) / 86400000) : null;
   const ehCompra = (x) => /aquisi|frete de entrada/i.test(x.categoria); // o resto dos gastos da peça = custos extras
   const ehMetaMargem = (m) => /^margem/i.test(m.titulo); // meta "Margem ..." na aba Plano, Alvo em %
+  // margem mínima da peça: a do tipo dela (aba Plano, linha Margem); senão a meta "Margem ..."; senão o padrão provisório
+  function margemDe(p) {
+    const t = DADOS.plano.margens && DADOS.plano.margens[p.tipo]; if (t > 0) return { v: t, fonte: "tipo " + p.tipo };
+    const mm = DADOS.plano.metas.find(ehMetaMargem); if (mm && mm.alvo > 0) return { v: mm.alvo <= 1 ? mm.alvo * 100 : mm.alvo, fonte: "meta" }; // aceita 0,4 ou 40
+    return { v: MARGEM_MINIMA, fonte: "padrão provisório" };
+  }
+  const abertas = () => DADOS.plano.entregas.filter((e) => e.estado !== "feito");
+  const ESTADOS_PECA = [["a caminho", "A caminho"], ["no relojoeiro", "No relojoeiro"], ["pronta", "Pronta"], ["à venda", "À venda"], ["vendida", "Vendida"]];
+  const TIPOS = [["própria", "Própria"], ["clube", "Com investidor do clube"], ["consignada", "Consignada"]];
+  // dias parada: conta desde que ficou pronta/à venda (ou desde a compra, se não houver data)
+  const parada = (p) => (p.estado === "pronta" || p.estado === "à venda") ? (p.desde ? -diasAte(p.desde) : diasDe(p)) : null;
   // Conta de uma peça: compra, extras e o preço usado (venda real > preço definido > venda mínima da faixa)
   function conta(p) {
     const g = L.filter((x) => x.tipo === "Gasto" && x.peca === p.id), compra = soma(g.filter(ehCompra)), custo = soma(g), vend = vendaPeca(p.id);
@@ -279,11 +330,16 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
   const aberto = new Set();
   const dobra = (det, id) => { det.open = aberto.has(id); det.ontoggle = () => { if (det.open) aberto.add(id); else aberto.delete(id); }; };
   const sw = (cls, txt) => { const s = el("span"); s.append(el("i", "sw " + cls), document.createTextNode(txt)); return s; };
-  function foco(boxId, titulo, itens, vazio) {
-    const box = $(boxId); box.textContent = ""; box.append(el("h2", null, titulo));
+  function foco(boxId, nome, itens, vazio) {
+    const box = $(boxId); box.textContent = ""; box.append(titulo(nome, null, AJUDA.foco));
     const ol = el("ol");
     if (!itens.length) { const li = el("li", "ok"); li.append(el("span", "t", vazio)); ol.append(li); }
-    for (const it of itens) { const li = el("li", it.urg ? "urg" : null), t = el("span", "t"); t.append(el("span", null, it.t)); if (it.tag) t.append(el("span", "tg", it.tag)); li.append(t); if (it.a) li.append(el("span", "a", it.a)); ol.append(li); }
+    for (const it of itens) {
+      const li = el("li", it.urg ? "urg" : null), t = el("span", "t"); t.append(el("span", null, it.t)); if (it.tag) t.append(el("span", "tg", it.tag)); li.append(t); if (it.a) li.append(el("span", "a", it.a));
+      const e = it.id && DADOS.plano.entregas.find((x) => x.id === it.id);
+      if (e) { const a = el("div", "acoes"); a.append(btn("Feito ✓", null, () => marcarFeito(e), "Marcar como feita: " + e.texto)); li.append(a); }
+      ol.append(li);
+    }
     box.append(ol);
   }
   // Link das fotos (coluna G da aba Peças): só mostra quando estiver preenchido
@@ -294,6 +350,94 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
     if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=w800`;
     return /\.(jpe?g|png|webp)(\?|$)/i.test(u) ? u : null;
   }
+
+  // ===== v15: ajuda, gravação, formulários =====
+  const btn = (txt, cls, fn, rotuloAria) => { const b = el("button", "btn " + (cls || ""), txt); b.type = "button"; if (fn) b.onclick = fn; if (rotuloAria) b.setAttribute("aria-label", rotuloAria); return b; };
+  // "?" que abre e fecha com toque (funciona no celular); o texto fica numa caixinha embaixo
+  const ajuda = (txt) => { const d = el("details", "ajuda"), s = el("summary", null, "?"); s.setAttribute("aria-label", "Ajuda"); d.append(s, el("p", null, txt)); return d; };
+  const titulo = (txt, small, help) => { const h = el("h2", null, txt); if (small) h.append(el("small", null, " " + small)); if (help) h.append(ajuda(help)); return h; };
+  const AJUDA = {
+    foco: "O que pede atenção agora: prazos perto ou atrasados, peças a caminho ou no relojoeiro e avisos. Toque em Feito quando terminar.",
+    chips: "Alertas automáticos: prazo em até 3 dias, peça pronta ou à venda parada há muito tempo, custo acima da venda mínima e margem abaixo da mínima.",
+    leitura: "Três frases tiradas dos números, para ler o negócio em 10 segundos. Some sozinha se faltar dado.",
+    grafico: "Barras: quanto saiu (gastos) e entrou (vendas) em cada mês. Linha tracejada: o resultado somado desde o começo. Toque num mês para ver só ele.",
+    rank: "Em que categorias o dinheiro foi gasto, da maior para a menor, no período escolhido.",
+    regua: "De cada R$ 100 que entrarem numa venda: quanto paga a compra e o frete, quanto paga restauro e extras e quanto sobra de lucro. Até o orçamento do relojoeiro chegar, é estimativa na venda mínima da faixa.",
+    proj: "Quanto de lucro o estoque daria se cada peça vendesse entre a venda mínima e a máxima que você definiu. Ajuste a faixa no cartão da peça.",
+    pecas: "Um cartão por relógio. Toque no estado (a caminho, no relojoeiro...) para mudar com um toque. Em Ajustar, mude a faixa de preço, a previsão e o tipo da peça.",
+    margens: "A margem mínima que cada tipo de peça precisa ter (lucro ÷ preço de venda). Campo vazio usa o padrão provisório de 40%. Abaixo disso, aparece alerta.",
+    lanc: "Registra um gasto ou uma venda direto na aba Lançamentos, numa linha nova. Não muda nem apaga lançamentos antigos. Errou? Corrija na planilha.",
+    pend: "Tudo o que falta fazer, na ordem de prioridade (▲ ▼ mudam a ordem). Estado: a fazer, andamento, esperando (sem alarme) ou feito. Em Editar você muda texto, prazo, divide em duas ou apaga.",
+    metas: "Quanto falta para cada meta e o ritmo por mês para chegar no prazo. Toque em Ajustar para mudar o número atual, o alvo ou o prazo.",
+    inicio: "A data em que as vendas e o Instagram começam. Ela define os meses da linha do tempo abaixo e aparece no Foco quando chegar perto.",
+    fases: "O que fazer em cada mês depois da 1ª postagem de produto. Com a data de início das vendas, cada mês ganha o nome do mês de verdade.",
+    feitas: "Pendências marcadas como feitas, com a data. Toque em Reabrir se precisar voltar com alguma.",
+    lancList: "Todas as linhas da aba Lançamentos, da mais nova para a mais antiga."
+  };
+  let ocupado = false, desfazerUlt = null, adiado = false, versao = 0;
+  const enviar = (corpo) => fetch("https://script.google.com/macros/s/AKfycbzya2TbnCDllXp-wSp1WMULsPHJEgEd8lljcBXVpj9n7wP5Ek-UoL7nkhsFzlWypoYGeQ/exec", { method: "POST", credentials: "omit", redirect: "follow", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(Object.assign({}, corpo, { k: CHAVE })) })
+    .then((r) => { if (!r.ok) throw new Error("sem conexão (" + r.status + ")"); return r.json(); });
+  function aviso(txt, tipo, botao) {
+    const a = $("aviso"); a.textContent = ""; a.className = "aviso " + (tipo || ""); a.append(el("span", null, txt));
+    if (botao) a.append(btn(botao.txt, null, botao.fn));
+    if (tipo === "erro") a.append(btn("Fechar", null, () => { a.hidden = true; }));
+    a.hidden = false; clearTimeout(a._t);
+    // o Desfazer só vale enquanto o aviso aparece (9 s): depois, outra pessoa pode ter mudado o mesmo item
+    if (tipo === "ok") a._t = setTimeout(() => { a.hidden = true; desfazerUlt = null; }, botao ? 9000 : 2500);
+  }
+  // grava uma ou mais ações em sequência; "inversos" desfaz (recebe as respostas, para saber Ids novos)
+  async function gravar(corpos, inversos) {
+    if (ocupado) { aviso("Espere terminar de salvar…", "erro"); return null; }
+    ocupado = true; aviso("Salvando…", "salvando");
+    const resp = [], lista = [].concat(corpos);
+    try {
+      for (const c of lista) { const r = await enviar(c); if (!r || r.erro) throw new Error((r && r.erro) || "sem resposta"); resp.push(r); }
+      const inv = typeof inversos === "function" ? inversos(resp) : inversos;
+      desfazerUlt = inv ? [].concat(inv) : null;
+      aviso("Salvo", "ok", desfazerUlt && { txt: "Desfazer", fn: desfazer });
+      return resp;
+    } catch (e) {
+      const m = String((e && e.message) || e); // erro de rede vira frase simples
+      if (resp.length) { // parte já foi gravada: não dizer "Não salvou"; o Desfazer vale para o que entrou
+        const inv = typeof inversos === "function" ? [] : [].concat(inversos || []).slice(0, resp.length);
+        desfazerUlt = inv.length ? inv : null;
+        aviso(`Salvou só parte (${resp.length} de ${lista.length}): ${m}. Confira e tente o resto de novo.`, "erro", desfazerUlt && { txt: "Desfazer", fn: desfazer });
+        return null;
+      }
+      aviso("Não salvou: " + (/fetch|network|load failed/i.test(m) ? "sem conexão com a planilha" : m) + ". O painel continua mostrando os dados; tente de novo.", "erro");
+      return null;
+    } finally {
+      ocupado = false;
+      if (resp.length) {
+        versao++; // busca de 30 s que saiu antes deste salvar traz dados velhos: é descartada
+        const d = resp[resp.length - 1].dados;
+        if (d) { usar(d); adiado = false; render(); } else buscar(); // salvou mas a leitura falhou: busca de novo
+      }
+    }
+  }
+  async function desfazer() { const inv = desfazerUlt; desfazerUlt = null; if (inv) { const r = await gravar(inv, null); if (r) aviso("Desfeito", "ok"); } }
+  // enquanto há um formulário aberto, a busca de 30 s guarda os dados e só redesenha quando fechar
+  const emEdicao = () => [...document.querySelectorAll("form.edita")].some((f) => !f.closest("[hidden]"));
+  function chegou(d) {
+    // alguém mudou a planilha (ex.: o JC): o Desfazer antigo deixa de valer
+    if (JSON.stringify(d.plano) !== JSON.stringify(DADOS.plano) || JSON.stringify(d.pecas) !== JSON.stringify(DADOS.pecas)) { desfazerUlt = null; const a = $("aviso"); if (a.classList.contains("ok")) a.hidden = true; }
+    usar(d); if (emEdicao()) adiado = true; else render(); }
+  function fecharForm(f) { f.remove(); if (adiado && !emEdicao()) { adiado = false; render(); } }
+  const hojeISO = () => { const h = new Date(); return `${h.getFullYear()}-${String(h.getMonth() + 1).padStart(2, "0")}-${String(h.getDate()).padStart(2, "0")}`; };
+  const somaDias = (iso, n) => { const [y, m, d] = iso.split("-").map(Number), x = new Date(y, m - 1, d + n); return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`; };
+  // campo de formulário: [rótulo, tipo, valor, extra]
+  function campo(f, nome, rotuloTxt, tipo, valor, extra) {
+    const l = el("label", null, rotuloTxt); let i;
+    if (tipo === "select") { i = el("select"); for (const [v, t] of extra) { const o = el("option", null, t); o.value = v; i.append(o); } }
+    else if (tipo === "textarea") i = el("textarea");
+    else { i = el("input"); i.type = tipo; if (tipo === "number") { i.min = "0"; i.step = "any"; i.inputMode = "decimal"; } }
+    i.name = nome; if (valor != null) i.value = valor; if (tipo === "text" || tipo === "textarea") i.maxLength = extra || 300;
+    l.append(i); f.append(l); return i;
+  }
+  function form(onde, depois) { const f = el("form", "edita"); f.noValidate = true; if (depois) onde.after(f); else onde.append(f); return f; }
+  // abre um formulário só por item; tocar de novo fecha
+  function alternaForm(chave, monta) { const ja = document.querySelector(`form.edita[data-chave="${CSS.escape(chave)}"]`); if (ja) { fecharForm(ja); return; } const f = monta(); f.dataset.chave = chave; const i = f.querySelector("input,select,textarea"); if (i) i.focus(); }
+  const numOuNulo = (v) => v.trim() === "" ? null : Number(v.replace(",", "."));
 
   function usar(d) {
     DADOS = d; L = d.lancamentos; P = d.pecas; meses = [];
@@ -307,8 +451,8 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
   const PERGUNTAS = { inicio: "Como está a Tempo Kura?", pecas: "Quanto vale o estoque e quanto pode render?", plano: "O que vem pela frente?" };
   const PISTAS = {
     inicio: "Em cima, o que pede atenção e a leitura dos números. Toque num mês do gráfico para ver o valor exato e só aquele mês.",
-    pecas: "Um cartão por relógio, com custo e lucro esperado. Toque no cartão para ver cada gasto da peça.",
-    plano: "Em cima, o que tem data. Depois, as metas, as fases depois da 1ª postagem e o que vem sem data. Tudo sai da aba Plano da planilha."
+    pecas: "Um cartão por relógio. Toque no estado (a caminho, no relojoeiro, pronta...) para mudar na hora; em Ajustar, mude a faixa de preço, a previsão e o tipo. Toque no cartão para ver cada gasto.",
+    plano: "Em cima, o que tem data. Depois, as pendências (marque Feito, edite, mude a ordem), as metas e as fases depois da 1ª postagem. Tudo grava na aba Plano da planilha."
   };
 
   function pills() {
@@ -372,7 +516,7 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
     const comFaixa = emEstoque.filter((p) => p.faixa && p.faixa[0] > 0 && p.faixa[1] > 0);
     const min = comFaixa.reduce((s, p) => s + p.faixa[0], 0), max = comFaixa.reduce((s, p) => s + p.faixa[1], 0);
     const custoFaixa = comFaixa.reduce((s, p) => s + custoPeca(p.id), 0);
-    pj.append(el("h2", null, "Se o estoque vender na faixa estimada"));
+    pj.append(titulo("Se o estoque vender na faixa estimada", null, AJUDA.proj));
     if (!comFaixa.length) pj.append(el("p", "nota", "Nenhuma peça em estoque com faixa de preço estimada."));
     else {
       const v = el("div", "v", `${brl(min - custoFaixa)} a ${brl(max - custoFaixa)}`); v.append(el("small", null, "de lucro")); pj.append(v);
@@ -382,7 +526,7 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
       const fx = el("i", "faixa"); fx.style.left = pc(min); fx.style.width = `calc(${pc(max)} - ${pc(min)})`; fx.title = "faixa de venda estimada"; tr.append(fx);
       pj.append(tr);
       const lg = el("div", "legend"); lg.append(sw("", "custo"), sw("listra", "faixa de venda estimada")); lg.firstChild.firstChild.style.background = "var(--concreto)"; pj.append(lg);
-      pj.append(el("p", "nota", `${comFaixa.length} ${comFaixa.length === 1 ? "peça" : "peças"} · estimativa de 01/11, antes da avaliação do relojoeiro. Não inclui custos indiretos nem taxas.`));
+      pj.append(el("p", "nota", `${comFaixa.length} ${comFaixa.length === 1 ? "peça" : "peças"} · faixa definida por você, antes do orçamento do relojoeiro. Não inclui custos indiretos nem taxas.`));
     }
 
     renderGrafico(); renderRank(Lp); renderFocoInicio(); renderChips(); renderLeitura(); renderRegua(); renderMetodo();
@@ -390,13 +534,12 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
 
   function renderChips() {
     const out = [], est = P.filter((p) => p.status !== "Vendida");
-    for (const p of est) { const d = diasDe(p); if (d != null && d > DIAS_PARADO) out.push(`${p.id} parado há ${d} dias`); }
+    // prazo perto (até 3 dias), só do que está a fazer ou em andamento
+    for (const e of abertas().filter((e) => e.prazo && e.estado !== "esperando")) { const d = diasAte(e.prazo); if (d >= 0 && d <= 3) out.push(`Prazo ${d === 0 ? "hoje" : `em ${d} ${d === 1 ? "dia" : "dias"}`}: ${e.texto}`); }
+    // peça parada: só conta peça pronta ou à venda (no relojoeiro ou a caminho não é parada)
+    for (const p of est) { const d = parada(p); if (d != null && d > DIAS_PARADO) out.push(`${p.id} ${p.estado} há ${d} dias sem vender`); }
     for (const p of est.filter((p) => p.faixa && p.faixa[0] > 0)) { const c = conta(p); if (c.custo > p.faixa[0]) out.push(`${p.id}: custo ${brl(c.custo)} passou da venda mínima estimada (${brl(p.faixa[0])})`); }
-    const mm = DADOS.plano.metas.find(ehMetaMargem);
-    {
-      const alvo = mm && mm.alvo > 0 ? (mm.alvo <= 1 ? mm.alvo * 100 : mm.alvo) : MARGEM_MINIMA; // aceita 0,4 ou 40
-      for (const p of P) { const c = conta(p); if (c.base && c.margem != null && c.margem < alvo) out.push(`${p.id}: margem ${Math.round(c.margem)}%, abaixo da meta de ${Math.round(alvo)}%${c.base === "real" ? "" : " (estimativa)"}`); }
-    }
+    for (const p of P) { const c = conta(p), m = margemDe(p); if (c.base && c.margem != null && c.margem < m.v) out.push(`${p.id}: margem ${Math.round(c.margem)}%, abaixo da mínima de ${Math.round(m.v)}% (${m.fonte})${c.base === "real" ? "" : ", estimativa"}`); }
     const box = $("chips"); box.textContent = ""; box.hidden = !out.length;
     for (const t of out) { const s = el("span", "chip", t); s.setAttribute("role", "listitem"); box.append(s); }
   }
@@ -414,14 +557,14 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
       fr.push(`${brl(preso)} estão presos em ${est.length} ${est.length === 1 ? "peça" : "peças"} sem vender${v ? `; a mais antiga, ${v.p.nome}, foi comprada há ${diasDe(v.p)} dias` : ""}.`);
     }
     const box = $("leitura"); box.textContent = ""; box.hidden = !fr.length; if (!fr.length) return;
-    box.append(el("h2", null, "Leitura do dono")); const ol = el("ol"); for (const t of fr) ol.append(el("li", null, t)); box.append(ol);
+    box.append(titulo("Leitura do dono", null, AJUDA.leitura)); const ol = el("ol"); for (const t of fr) ol.append(el("li", null, t)); box.append(ol);
   }
 
   // Régua dos R$ 100: de cada R$ 100 da venda, quanto foi compra, custo extra e lucro
   let reguaSel = "total";
   function renderRegua() {
     const box = $("regua"); box.textContent = "";
-    const h = el("h2", null, "Para onde vai cada R$ 100"); h.append(el("small", null, "da venda")); box.append(h);
+    box.append(titulo("Para onde vai cada R$ 100", "da venda", AJUDA.regua));
     const comP = P.filter((p) => conta(p).base && conta(p).preco > 0);
     if (!comP.length) { box.append(el("p", "nota", "Nenhuma peça com venda, preço ou faixa estimada ainda.")); return; }
     if (reguaSel !== "total" && !comP.some((p) => p.id === reguaSel)) reguaSel = "total";
@@ -444,7 +587,7 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
     box.append(dl);
     const so = cs.length === 1 ? cs[0] : null, est = cs.some((c) => c.base !== "real");
     let n = so ? (so.base === "real" ? "Venda real." : rotulo(so).replace(/^ \((.*)\)$/, "$1") + ".") : est ? "Estimativa: soma vendas reais com a venda mínima da faixa das peças não vendidas." : "Vendas reais.";
-    if (so && so.base === "estimativa") { const p = comP.find((p) => p.id === reguaSel), mx = p.faixa[1]; if (mx > so.preco) n += ` Na venda máxima (${brl(mx)}), o lucro seria ${brl((mx - so.custo) / mx * 100)} de cada R$ 100.`; }
+    if (so && so.base === "estimativa") { const p = comP.length === 1 ? comP[0] : comP.find((p) => p.id === reguaSel), mx = p.faixa[1]; if (mx > so.preco) n += ` Na venda máxima (${brl(mx)}), o lucro seria ${brl((mx - so.custo) / mx * 100)} de cada R$ 100.`; }
     box.append(el("p", "nota", n[0].toUpperCase() + n.slice(1) + " Não entram os custos indiretos (sem peça na planilha)."));
   }
 
@@ -454,7 +597,8 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
       "Custo da peça = soma dos gastos lançados com o ID dela. Compra e frete = categorias \"Aquisição\" e \"Frete de entrada\"; o resto é custo extra.",
       "Preço usado na régua e na margem: venda real; se não vendeu, o preço de venda da aba Peças; se não houver, a venda mínima da faixa da aba Plano (estimativa).",
       "Margem = (preço − custo da peça) ÷ preço. Custos indiretos (sem peça) ficam de fora da peça, mas entram em Investido e no Resultado de caixa.",
-      `Alerta de peça parada: mais de ${DIAS_PARADO} dias desde a compra sem vender. Alerta de margem: abaixo da meta "Margem ..." da aba Plano; sem meta lá, vale ${MARGEM_MINIMA}% (margem = lucro ÷ preço de venda).`,
+      `Alerta de peça parada: peça pronta ou à venda há mais de ${DIAS_PARADO} dias sem vender (peça a caminho ou no relojoeiro não conta). Alerta de margem: abaixo da margem mínima do tipo da peça (Peças → Margem mínima por tipo); sem valor lá, vale a meta "Margem ..." da aba Plano ou o padrão provisório de ${MARGEM_MINIMA}% (margem = lucro ÷ preço de venda).`,
+      "Pendência atrasada: só conta para \"a fazer\" e \"andamento\" com prazo vencido. \"Esperando\" mostra a previsão, sem alarme.",
       "Variação: contra o mês anterior e contra a média dos meses antes dele. A mini-linha aparece com 2 meses ou mais de lançamentos."
     ]) ul.append(el("li", null, t));
     dobra($("metodoBox"), "metodo");
@@ -511,31 +655,44 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
   }
 
   function alertas() {
-    const out = DADOS.avisos.map((a) => ({ tag: a.tag, t: a.texto, a: a.acao }));
-    for (const e of DADOS.plano.entregas) if (e.prazo) { const d = diasAte(e.prazo); if (d <= 3) out.push({ tag: "prazo", t: e.texto, a: d < 0 ? `atrasada há ${-d} dias` : d === 0 ? "é hoje" : `faltam ${d} dias` }); }
-    const semPreco = P.filter((p) => p.status !== "Vendida" && !p.venda);
-    if (semPreco.length) out.push({ tag: "preço", t: `${semPreco.length} ${semPreco.length === 1 ? "peça sem preço de venda" : "peças sem preço de venda"}`, a: "Avaliação do relojoeiro → definir o preço." });
-    // peça parada virou chip de alerta (renderChips), com o limite em DIAS_PARADO
-    return out.slice(0, 3);
+    const out = DADOS.avisos.map((a) => ({ tag: a.tag, t: a.texto, a: a.acao, urg: true }));
+    // atraso só conta para "a fazer" e "andamento"; "esperando" aparece sem alarme
+    for (const e of abertas()) if (e.prazo) {
+      const d = diasAte(e.prazo);
+      if (e.estado === "esperando") { if (d <= 3) out.push({ tag: "esperando", t: e.texto, a: `esperando${e.nota ? " " + e.nota : ""} · previsão ${dataBR(e.prazo)}`, id: e.id }); }
+      else if (d <= 3) out.push({ tag: "prazo", t: e.texto, a: d < 0 ? `atrasada há ${-d} ${-d === 1 ? "dia" : "dias"}` : d === 0 ? "é hoje" : `faltam ${d} ${d === 1 ? "dia" : "dias"}`, urg: true, id: e.id });
+    }
+    // peças a caminho ou no relojoeiro: o alerta sai do estado da peça
+    for (const p of P.filter((p) => p.estado === "a caminho" || p.estado === "no relojoeiro")) {
+      const d = p.previsao ? diasAte(p.previsao) : null, prev = p.previsao ? ` · previsão ${dataBR(p.previsao)}${d < 0 ? `, passou há ${-d} ${-d === 1 ? "dia" : "dias"}` : d === 0 ? ", hoje" : `, em ${d} ${d === 1 ? "dia" : "dias"}`}` : "";
+      out.push({ tag: p.estado, t: `${p.nome} (${p.id})`, a: (p.estado === "a caminho" ? "a caminho" : `no relojoeiro${p.desde ? " desde " + dataBR(p.desde) : ""}`) + prev, urg: d != null && d < 0 });
+    }
+    const ini = DADOS.plano.inicioVendas;
+    if (ini) { const d = diasAte(ini); if (d >= 0 && d <= 30) out.push({ tag: "lançamento", t: "Início das vendas e do Instagram", a: `${dataBR(ini)} · ${d === 0 ? "é hoje" : `em ${d} ${d === 1 ? "dia" : "dias"}`}` }); }
+    const semPreco = P.filter((p) => p.status !== "Vendida" && !p.venda && !(p.faixa && p.faixa[0] > 0));
+    if (semPreco.length) out.push({ tag: "preço", t: `${semPreco.length} ${semPreco.length === 1 ? "peça sem preço de venda" : "peças sem preço de venda"}`, a: "Digite a faixa no cartão da peça (Peças → Ajustar)." });
+    // urgentes primeiro; o resto mantém a ordem
+    return out.map((x, i) => [x, i]).sort((a, b) => (b[0].urg ? 1 : 0) - (a[0].urg ? 1 : 0) || a[1] - b[1]).map((x) => x[0]);
   }
   // próxima entrega com data (a mais perto, ainda não vencida há mais de 30 dias)
-  const proxima = () => DADOS.plano.entregas.filter((e) => e.prazo && diasAte(e.prazo) >= -30).sort((a, b) => a.prazo.localeCompare(b.prazo))[0];
+  const proxima = () => abertas().filter((e) => e.prazo && e.estado !== "esperando" && diasAte(e.prazo) >= -30).sort((a, b) => a.prazo.localeCompare(b.prazo))[0];
   const quandoTxt = (d) => d < 0 ? `atrasada há ${-d} ${-d === 1 ? "dia" : "dias"}` : d === 0 ? "é hoje" : `em ${d} ${d === 1 ? "dia" : "dias"}`;
   function renderFocoInicio() {
-    const itens = alertas().map((a) => ({ t: a.t, a: a.a, tag: a.tag, urg: a.tag === "prazo" }));
+    const itens = alertas();
     const px = proxima();
-    if (px && !itens.some((i) => i.t === px.texto)) itens.unshift({ t: px.texto, a: `${dataBR(px.prazo)} · ${quandoTxt(diasAte(px.prazo))}`, tag: "próxima entrega", urg: diasAte(px.prazo) <= 3 });
-    foco("focoInicio", "Foco agora", itens.slice(0, 3), "Tudo dentro do normal.");
+    if (px && !itens.some((i) => i.id === px.id)) itens.push({ t: px.texto, a: `${dataBR(px.prazo)} · ${quandoTxt(diasAte(px.prazo))}`, tag: "próxima entrega", urg: diasAte(px.prazo) <= 3, id: px.id });
+    foco("focoInicio", "Foco agora", itens.slice(0, 4), "Tudo dentro do normal.");
   }
 
   function renderPecas() {
     const box = $("pecas"); box.textContent = "";
     for (const p of P) {
-      const c = el("details", "box peca"), custo = custoPeca(p.id), venda = vendaPeca(p.id) || p.venda;
+      const wrap = el("div", "box peca"), c = el("details", "pd"), custo = custoPeca(p.id), venda = vendaPeca(p.id) || p.venda;
       const dias = p.compra ? Math.floor((hoje - new Date(p.compra + "T12:00")) / 86400000) : null;
       const s = el("summary"), src = fotoSrc(p.foto);
       if (src) { const img = el("img", "foto"); img.src = src; img.alt = `Foto do ${p.nome}`; img.loading = "lazy"; img.referrerPolicy = "no-referrer"; img.onerror = () => img.remove(); s.append(img); }
-      s.append(el("div", "id", `${p.id} · ${p.status}`), el("div", "nome", p.nome));
+      const situ = p.estado ? ESTADOS_PECA.find((x) => x[0] === p.estado)[1] + (p.desde ? " desde " + dataBR(p.desde).slice(0, 5) : "") + (p.previsao && p.estado !== "vendida" ? " · previsão " + dataBR(p.previsao).slice(0, 5) : "") : p.status;
+      s.append(el("div", "id", `${p.id} · ${situ}`), el("div", "nome", p.nome));
       // o que importa da peça, sem abrir: quanto custou e quanto deve render
       const rs = el("div", "resumo"), esq = el("span");
       if (venda) esq.append(document.createTextNode("Lucro real "), el("b", null, brl(venda - custo)));
@@ -550,68 +707,276 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
       else if (p.faixa) { linha("Faixa estimada", `${brl(p.faixa[0])} a ${brl(p.faixa[1])}`); linha("Lucro estimado", `${brl(p.faixa[0] - custo)} a ${brl(p.faixa[1] - custo)}`, "lume"); }
       if (p.compra) linha("Comprada em", p.compra.split("-").reverse().join("/") + (p.status !== "Vendida" ? ` · ${dias} dias` : ""));
       c.append(dl);
+      const m = margemDe(p); linha("Tipo da peça", (TIPOS.find((t) => t[0] === p.tipo) || TIPOS[0])[1]); linha("Margem mínima", `${Math.round(m.v)}% (${m.fonte})`);
       if (linkOk(p.foto)) { const a = el("a", "fotos", "Ver todas as fotos"); a.href = p.foto; a.target = "_blank"; a.rel = "noopener noreferrer"; c.append(a); }
-      dobra(c, "peca:" + p.id); box.append(c);
+      dobra(c, "peca:" + p.id); wrap.append(c);
+      // estado com um toque
+      const est = el("div", "estados"); est.setAttribute("role", "group"); est.setAttribute("aria-label", `Estado do ${p.id}`);
+      for (const [k, n] of ESTADOS_PECA) {
+        const b = btn(n, null, () => {
+          if (p.estado === k) return;
+          const sai = p.status === "Vendida" && k !== "vendida"; // tirar de Vendida mexe na aba Peças: pede confirmação
+          if (sai && !confirm(`${p.id} está como Vendida na planilha. Tirar de Vendida e marcar "${n}"?`)) return;
+          gravar({ acao: "peca", peca: p.id, estado: k, saiDeVendida: sai }, { acao: "peca", peca: p.id, estado: p.estado || "", desde: p.desde || "", saiDeVendida: k === "vendida" });
+        });
+        b.setAttribute("aria-pressed", String(p.estado === k)); est.append(b);
+      }
+      wrap.append(est);
+      const ac = el("div", "acoes"), aj = btn("Ajustar preço, previsão e tipo", null, () => alternaForm("peca:" + p.id, () => formPeca(p, ac)));
+      ac.append(aj); wrap.append(ac);
+      box.append(wrap);
     }
+    renderMargens(); renderNovoLanc();
     dobra($("lancBox"), "lanc");
     const t = $("lanc"); t.textContent = ""; $("nL").textContent = L.length + " linhas";
     const hr = el("tr"); for (const [h, r] of [["Data"], ["Categoria"], ["Descrição"], ["Peça"], ["Valor", 1]]) hr.append(el("th", r ? "r" : null, h)); t.append(hr);
     for (const x of [...L].sort((a, b) => b.data.localeCompare(a.data))) { const tr = el("tr"); tr.append(el("td", null, x.data.split("-").reverse().join("/")), el("td", null, x.categoria), el("td", null, x.descricao), el("td", null, x.peca || "indireto"), el("td", "r", (x.tipo === "Receita" ? "+" : "−") + brl(x.valor, true).replace("−", ""))); t.append(tr); }
   }
 
+  function formPeca(p, onde) {
+    const f = form(onde, true);
+    const d2 = el("div", "duas"); f.append(d2);
+    const mn = campo(d2, "min", "Venda mínima (R$)", "number", p.faixa ? p.faixa[0] : ""), mx = campo(d2, "max", "Venda máxima (R$)", "number", p.faixa ? p.faixa[1] : "");
+    const d3 = el("div", "duas"); f.append(d3);
+    const pv = campo(d3, "previsao", p.estado === "a caminho" ? "Chega em (previsão)" : "Previsão (pronta / chegada)", "date", p.previsao || "");
+    const ds = campo(d3, "desde", "Nesse estado desde", "date", p.desde || "");
+    const tp = campo(f, "tipo", "Tipo da peça", "select", p.tipo, TIPOS);
+    const ac = el("div", "acoes"); f.append(ac);
+    ac.append(btn("Salvar", "pri", () => {
+      const a = numOuNulo(mn.value), b = numOuNulo(mx.value);
+      if ((a == null) !== (b == null) || (a != null && (!(a > 0) || !(b >= a)))) { aviso("Preencha as duas vendas, com a máxima maior ou igual à mínima.", "erro"); return; }
+      const corpos = [], inv = [];
+      if (p.faixa ? a !== p.faixa[0] || b !== p.faixa[1] : a != null) { corpos.push({ acao: "faixa", peca: p.id, min: a, max: b }); inv.push({ acao: "faixa", peca: p.id, min: p.faixa ? p.faixa[0] : null, max: p.faixa ? p.faixa[1] : null }); }
+      const pc = { acao: "peca", peca: p.id }, pi = { acao: "peca", peca: p.id };
+      if (pv.value !== (p.previsao || "")) { pc.previsao = pv.value; pi.previsao = p.previsao || ""; }
+      if (ds.value !== (p.desde || "")) { pc.desde = ds.value; pi.desde = p.desde || ""; }
+      if (tp.value !== p.tipo) { pc.tipo = tp.value; pi.tipo = p.tipo; }
+      if (Object.keys(pc).length > 2) { corpos.push(pc); inv.push(pi); }
+      if (!corpos.length) { fecharForm(f); return; }
+      gravar(corpos, inv);
+    }), btn("Cancelar", null, () => fecharForm(f)));
+    return f;
+  }
+
+  function renderMargens() {
+    const box = $("margensBox"); box.textContent = "";
+    box.append(titulo("Margem mínima por tipo de peça", null, AJUDA.margens));
+    const ul = el("ul", "lista");
+    for (const [k, n] of TIPOS) {
+      const v = DADOS.plano.margens ? DADOS.plano.margens[k] : null, li = el("li");
+      li.append(el("span", null, n), el("span", "q", v > 0 ? `${v.toLocaleString("pt-BR")}%` : `vazio: usa o padrão provisório de ${MARGEM_MINIMA}%`));
+      const ac = el("div", "acoes");
+      ac.append(btn("Mudar", null, () => alternaForm("margem:" + k, () => {
+        const f = form(ac, true), i = campo(f, "valor", `Margem mínima de "${n}" (%). Vazio = padrão`, "number", v > 0 ? v : ""); i.max = "95";
+        const a2 = el("div", "acoes"); f.append(a2);
+        a2.append(btn("Salvar", "pri", () => {
+          const x = numOuNulo(i.value);
+          if (x != null && !(x > 0 && x <= 95)) { aviso("Use um número de 1 a 95.", "erro"); return; }
+          gravar({ acao: "margem", tipo: k, valor: x }, { acao: "margem", tipo: k, valor: v > 0 ? v : null });
+        }), btn("Cancelar", null, () => fecharForm(f)));
+        return f;
+      }), "Mudar margem mínima: " + n));
+      li.append(ac); ul.append(li);
+    }
+    box.append(ul);
+  }
+
+  function renderNovoLanc() {
+    const box = $("novoLancBox"); box.textContent = "";
+    box.append(titulo("Registrar gasto ou venda", null, AJUDA.lanc));
+    const lt = DADOS.listas || { categorias: [], formas: [] };
+    if (!lt.categorias.length || !lt.formas.length) { box.append(el("p", "nota", "A aba Config não foi encontrada: lance direto na planilha.")); return; }
+    const ac = el("div", "acoes"); box.append(ac);
+    ac.append(btn("Novo lançamento", "pri", () => alternaForm("lanc", () => {
+      const f = form(ac, true), d2 = el("div", "duas"); f.append(d2);
+      const dt = campo(d2, "data", "Data", "date", hojeISO()), vl = campo(d2, "valor", "Valor (R$)", "number", "");
+      const ct = campo(f, "categoria", "Categoria", "select", lt.categorias[0], lt.categorias.map((c) => [c, c]));
+      const ds = campo(f, "descricao", "Descrição", "text", "", 200);
+      const d3 = el("div", "duas"); f.append(d3);
+      const fm = campo(d3, "forma", "Forma de pagamento", "select", lt.formas.includes("Pix") ? "Pix" : lt.formas[0], lt.formas.map((c) => [c, c]));
+      const pc = campo(d3, "peca", "Peça", "select", "", [["", "Nenhuma (custo indireto)"], ...P.map((p) => [p.id, `${p.id} · ${p.nome}`])]);
+      const a2 = el("div", "acoes"); f.append(a2);
+      a2.append(btn("Salvar na planilha", "pri", () => {
+        const v = numOuNulo(vl.value);
+        if (!dt.value || !(v > 0) || !ds.value.trim()) { aviso("Preencha data, valor e descrição.", "erro"); return; }
+        if (!confirm(`Lançar ${ct.value}: ${ds.value.trim()} · ${brl(v, true)}? Para corrigir depois, só na planilha.`)) return;
+        gravar({ acao: "lanc", data: dt.value, categoria: ct.value, descricao: ds.value, valor: v, forma: fm.value, peca: pc.value }, null);
+      }), btn("Cancelar", null, () => fecharForm(f)));
+      return f;
+    })));
+  }
+
   function diasAte(iso) { const [y, m, d] = iso.split("-").map(Number); const h = new Date(); h.setHours(0, 0, 0, 0); return Math.round((new Date(y, m - 1, d) - h) / 86400000); }
   const dataBR = (iso) => iso.split("-").reverse().join("/");
 
-  function renderPlano() {
-    const E = DADOS.plano.entregas;
-    // fases: "Mês 1–2 após a 1ª postagem" → começa no mês 1, termina no 2
-    const fase = (q) => { const r = /m[eê]s\s*(\d+)(?:\s*[–-]\s*(\d+))?\s*após/i.exec(q || ""); return r ? [+r[1], +(r[2] || r[1])] : null; };
-    const comData = E.filter((e) => e.prazo).sort((a, b) => a.prazo.localeCompare(b.prazo));
-    const fases = E.filter((e) => !e.prazo && fase(e.quando)), resto = E.filter((e) => !e.prazo && !fase(e.quando));
+  const ESTADOS_PEND = [["a fazer", "A fazer"], ["andamento", "Andamento"], ["esperando", "Esperando"], ["feito", "Feito"]];
+  const fase = (q) => { const r = /m[eê]s\s*(\d+)(?:\s*[–-]\s*(\d+))?\s*após/i.exec(q || ""); return r ? [+r[1], +(r[2] || r[1])] : null; };
+  const atrasada = (e) => e.prazo && e.estado !== "esperando" && e.estado !== "feito" && diasAte(e.prazo) < 0;
+  function marcarFeito(e) { gravar({ acao: "pend.editar", id: e.id, estado: "feito" }, { acao: "pend.editar", id: e.id, estado: e.estado }); }
+  function infoPend(e) {
+    const p = [];
+    if (e.prazo) { const d = diasAte(e.prazo); p.push(e.estado === "esperando" ? `previsão ${dataBR(e.prazo)}` : `${dataBR(e.prazo)} · ${quandoTxt(d)}`); }
+    if (e.estado === "esperando") p.push(`esperando${e.nota ? " " + e.nota : ""}`); else if (e.nota) p.push(e.nota);
+    if (e.quando) p.push(e.quando);
+    return p.join(" · ");
+  }
+  // formulário de pendência: e = null cria uma nova
+  function formPend(e, onde) {
+    const f = form(onde, true);
+    const tx = campo(f, "texto", "O que é", "textarea", e ? e.texto : "", 300);
+    const d2 = el("div", "duas"); f.append(d2);
+    const es = campo(d2, "estado", "Estado", "select", e ? e.estado : "a fazer", ESTADOS_PEND);
+    const pz = campo(d2, "prazo", "Prazo (ou previsão)", "date", e && e.prazo ? e.prazo : "");
+    const nt = campo(f, "nota", "Esperando o quê / observação", "text", e ? e.nota : "", 200);
+    const qd = campo(f, "quando", "Quando, se não tem data (ex.: antes do teaser)", "text", e ? e.quando : "", 120);
+    const ac = el("div", "acoes"); f.append(ac);
+    const salvar = btn("Salvar", "pri", () => {
+      if (!tx.value.trim()) { aviso("Escreva o que é a pendência.", "erro"); return; }
+      const novo = { texto: tx.value, estado: es.value, prazo: pz.value, nota: nt.value, quando: qd.value };
+      if (!e) { gravar({ acao: "pend.criar", ...novo }, (r) => ({ acao: "pend.apagar", id: r[0].id })); return; }
+      const c = { acao: "pend.editar", id: e.id }, inv = { acao: "pend.editar", id: e.id }, velho = { texto: e.texto, estado: e.estado, prazo: e.prazo || "", nota: e.nota, quando: e.quando };
+      for (const k in novo) if (novo[k] !== velho[k] && !(k === "texto" && novo[k].trim() === velho[k])) { c[k] = novo[k]; inv[k] = velho[k]; }
+      if (inv.estado === "feito" && e.feitoEm) inv.feitoEm = e.feitoEm;
+      if (Object.keys(c).length === 2) { fecharForm(f); return; }
+      gravar(c, inv);
+    });
+    ac.append(salvar);
+    if (e) {
+      ac.append(btn("Adiar 7 dias", null, () => { pz.value = somaDias(pz.value && diasAte(pz.value) >= 0 ? pz.value : hojeISO(), 7); pz.focus(); }));
+      ac.append(btn("Dividir em duas", null, () => {
+        if (f.querySelector("[name=texto2]")) return;
+        const t2 = campo(f, "texto2", "2ª parte (vira outra pendência logo abaixo; a de cima fica com o texto acima)", "textarea", "", 300);
+        f.append(ac); t2.focus();
+        salvar.textContent = "Salvar as duas";
+        salvar.onclick = () => {
+          if (!tx.value.trim() || !t2.value.trim()) { aviso("Escreva as duas partes.", "erro"); return; }
+          gravar({ acao: "pend.dividir", id: e.id, texto1: tx.value, texto2: t2.value }, (r) => [{ acao: "pend.apagar", id: r[0].id }, { acao: "pend.editar", id: e.id, texto: e.texto }]);
+        };
+      }));
+      ac.append(btn("Apagar", "perigo", () => {
+        if (!confirm(`Apagar "${e.texto}"? Some da aba Plano.`)) return;
+        const E = DADOS.plano.entregas, i = E.findIndex((x) => x.id === e.id), prox = i >= 0 ? E[i + 1] : null; // por id: a busca de 30 s troca os objetos
+        const volta = { acao: "pend.criar", texto: e.texto, estado: e.estado, prazo: e.prazo || "", nota: e.nota, quando: e.quando };
+        if (prox) volta.antesDe = prox.id;
+        gravar({ acao: "pend.apagar", id: e.id }, volta);
+      }));
+    }
+    ac.append(btn("Cancelar", null, () => fecharForm(f)));
+    return f;
+  }
 
-    // Foco: o que tem data + a 1ª prioridade sem data
-    const itens = comData.map((e) => { const d = diasAte(e.prazo); return { t: e.texto, a: `${dataBR(e.prazo)} · ${quandoTxt(d)}`, tag: "com data", urg: d <= 3 }; });
-    if (resto[0]) itens.push({ t: resto[0].texto, a: resto[0].quando, tag: "prioridade" });
+  function renderPlano() {
+    const E = DADOS.plano.entregas, A = abertas();
+    const comData = A.filter((e) => e.prazo).sort((a, b) => a.prazo.localeCompare(b.prazo));
+    const fases = A.filter((e) => !e.prazo && fase(e.quando)), resto = A.filter((e) => !e.prazo && !fase(e.quando) && e.estado !== "esperando");
+
+    // Foco: o que tem data + a 1ª prioridade sem data ("esperando" aparece sem alarme)
+    const itens = comData.map((e) => { const d = diasAte(e.prazo), esp = e.estado === "esperando"; return { t: e.texto, a: infoPend(e), tag: esp ? "esperando" : "com data", urg: !esp && d <= 3, id: e.id }; });
+    if (resto[0]) itens.push({ t: resto[0].texto, a: resto[0].quando, tag: "prioridade", id: resto[0].id });
     foco("focoPlano", "Foco agora", itens.slice(0, 4), "Nada com data marcada.");
+
+    // Pendências: todas as abertas, na ordem da planilha (ordem = prioridade)
+    const h = $("pendBox").querySelector("h2"); if (!h.querySelector(".ajuda")) h.append(ajuda(AJUDA.pend));
+    const topo = $("pendTopo"); topo.textContent = ""; const ta = el("div", "acoes"); ta.style.margin = "0 0 10px"; topo.append(ta);
+    ta.append(btn("+ Nova pendência", "pri", () => alternaForm("pend:nova", () => formPend(null, ta))));
+    const ul = $("entregas"); ul.textContent = ""; $("nE").textContent = A.length + (A.length === 1 ? " item" : " itens");
+    A.forEach((e, i) => {
+      const li = el("li", "pend"), t = el("div", "t"); t.append(el("span", null, e.texto));
+      const at = atrasada(e); t.append(el("span", "est " + (at ? "atraso" : e.estado), at ? "atrasada" : e.estado)); li.append(t);
+      const inf = infoPend(e); if (inf) li.append(el("span", "q" + (at ? " atr" : ""), inf));
+      const ac = el("div", "acoes");
+      const sobe = btn("▲", null, () => gravar({ acao: "pend.mover", id: e.id, dir: -1 }, { acao: "pend.mover", id: e.id, dir: 1 }), "Subir prioridade: " + e.texto);
+      const desce = btn("▼", null, () => gravar({ acao: "pend.mover", id: e.id, dir: 1 }, { acao: "pend.mover", id: e.id, dir: -1 }), "Descer prioridade: " + e.texto);
+      sobe.disabled = i === 0; desce.disabled = i === A.length - 1;
+      ac.append(btn("Feito ✓", null, () => marcarFeito(e), "Marcar como feita: " + e.texto), btn("Editar", null, () => alternaForm("pend:" + e.id, () => formPend(e, ac)), "Editar: " + e.texto), sobe, desce);
+      li.append(ac); ul.append(li);
+    });
+    if (!A.length) ul.append(el("li", null, "Nenhuma pendência aberta."));
+
+    // Feitas, recolhidas
+    const F = E.filter((e) => e.estado === "feito").sort((a, b) => (b.feitoEm || "").localeCompare(a.feitoEm || ""));
+    const fu = $("feitas"); fu.textContent = ""; $("nF").textContent = F.length + "";
+    for (const e of F) {
+      const li = el("li", "pend"); li.append(el("span", null, e.texto), el("span", "q", e.feitoEm ? "feita em " + dataBR(e.feitoEm) : "feita"));
+      const ac = el("div", "acoes"); ac.append(btn("Reabrir", null, () => gravar({ acao: "pend.editar", id: e.id, estado: "a fazer" }, { acao: "pend.editar", id: e.id, estado: "feito", feitoEm: e.feitoEm || "" }), "Reabrir: " + e.texto)); li.append(ac); fu.append(li);
+    }
+    if (!F.length) fu.append(el("li", null, "Nada marcado como feito ainda."));
+    dobra($("feitasBox"), "feitas");
 
     // Metas: mesmo nome com cenários diferentes, ex. "Relógios vendidos (melhor cenário)", viram um cartão só
     const box = $("metas"); box.textContent = ""; const grupos = new Map();
     for (const m of DADOS.plano.metas.filter((m) => !ehMetaMargem(m))) { const base = m.titulo.replace(/\s*\(([^)]*)\)\s*$/, ""), cen = (m.titulo.match(/\(([^)]*)\)\s*$/) || [])[1] || null; if (!grupos.has(base)) grupos.set(base, []); grupos.get(base).push({ ...m, cen }); }
     for (const [base, ms] of grupos) {
       const m0 = ms[0], atual = m0.atual === "vendidas" ? P.filter((p) => p.status === "Vendida").length : m0.atual, alvo = Math.max(...ms.map((m) => m.alvo));
-      const c = el("article", "box peca"); c.append(el("div", "nome", base));
-      c.append(el("div", "v", atual == null ? "sem número" : `${atual} de ${alvo}`));
+      const c = el("article", "box peca"), hn = el("div", "nome", base); hn.style.cssText = "display:flex;gap:8px;align-items:flex-start"; hn.append(ajuda(AJUDA.metas)); c.append(hn);
+      c.append(el("div", "v", atual == null ? "sem número" : `${atual.toLocaleString("pt-BR")} de ${alvo.toLocaleString("pt-BR")}`));
       c.lastChild.style.cssText = "font:700 1.6rem/1.2 var(--display);letter-spacing:-.02em;margin:6px 0";
       const tr = el("div", "track"), f = el("i", "feito"); f.style.width = (atual ? Math.min(100, atual / alvo * 100) : 0) + "%"; tr.append(f); c.append(tr);
       const cen = el("div", "cen");
       for (const m of ms.sort((a, b) => a.prazo.localeCompare(b.prazo))) {
         const dias = diasAte(m.prazo), falta = Math.max(0, m.alvo - (atual || 0)), mesesR = Math.max(1, dias / 30), row = el("div");
-        row.append(el("b", null, m.cen ? m.cen[0].toUpperCase() + m.cen.slice(1) : "Prazo"), el("b", "r", atual == null ? "atualizar o número" : `≈ ${Math.ceil(falta / mesesR)} ${m.unidade} por mês`));
+        row.append(el("b", null, m.cen ? m.cen[0].toUpperCase() + m.cen.slice(1) : "Prazo"), el("b", "r", atual == null ? "atualizar o número" : `≈ ${Math.ceil(falta / mesesR).toLocaleString("pt-BR")} ${m.unidade} por mês`));
         row.append(el("span", null, `até ${dataBR(m.prazo)}`), el("span", "r", dias >= 0 ? `faltam ${dias} dias` : `prazo passou há ${-dias} dias`));
         cen.append(row);
       }
-      c.append(cen); box.append(c);
+      c.append(cen);
+      const ac = el("div", "acoes"); c.append(ac);
+      ac.append(btn("Ajustar", null, () => alternaForm("meta:" + base, () => {
+        const fm = form(ac, true), campos = [];
+        const at = m0.auto ? null : campo(fm, "atual", "Número atual" + (/^Seguidores/.test(base) ? " (vazio = Instagram)" : ""), "number", m0.atual == null || m0.ig ? "" : m0.atual);
+        if (m0.auto) fm.append(el("p", "nota", "O número atual conta sozinho (peças vendidas)."));
+        for (const m of ms) { const d2 = el("div", "duas"); fm.append(d2); campos.push([m, campo(d2, "alvo", `Alvo${m.cen ? " (" + m.cen + ")" : ""}`, "number", m.alvo), campo(d2, "prazo", "Prazo", "date", m.prazo)]); }
+        const a2 = el("div", "acoes"); fm.append(a2);
+        a2.append(btn("Salvar", "pri", () => {
+          const corpos = [], inv = [];
+          for (const [m, al, pz] of campos) {
+            const c1 = { acao: "meta", id: m.id }, i1 = { acao: "meta", id: m.id }, a = numOuNulo(al.value);
+            if (!(a > 0) || !pz.value) { aviso("Alvo maior que zero e prazo são obrigatórios.", "erro"); return; }
+            if (a !== m.alvo) { c1.alvo = a; i1.alvo = m.alvo; }
+            if (pz.value !== m.prazo) { c1.prazo = pz.value; i1.prazo = m.prazo; }
+            if (at) { const v = numOuNulo(at.value), velho = m.atual == null || m.ig ? null : m.atual; /* número do Instagram não está na planilha: o desfazer volta a célula vazia */ if (v !== velho) { if (v != null && !(v >= 0)) { aviso("Número atual inválido.", "erro"); return; } c1.atual = v == null ? "" : v; i1.atual = velho == null ? "" : velho; } }
+            if (Object.keys(c1).length > 2) { corpos.push(c1); inv.push(i1); }
+          }
+          if (!corpos.length) { fecharForm(fm); return; }
+          gravar(corpos, inv);
+        }), btn("Cancelar", null, () => fecharForm(fm)));
+        return fm;
+      }), "Ajustar meta: " + base));
+      box.append(c);
     }
 
-    // Linha do tempo das fases
+    // Início das vendas: alimenta a linha do tempo e o Foco
+    const ini = DADOS.plano.inicioVendas, ib = $("inicioBox"); ib.textContent = "";
+    ib.append(titulo("Início das vendas e do Instagram", null, AJUDA.inicio));
+    const di = ini ? diasAte(ini) : null;
+    ib.append(el("p", null, ini ? `${dataBR(ini)} · ${di > 0 ? `em ${di} ${di === 1 ? "dia" : "dias"}` : di === 0 ? "é hoje" : `começou há ${-di} dias`}` : "Sem data ainda."));
+    const iac = el("div", "acoes"); ib.append(iac);
+    iac.append(btn(ini ? "Mudar data" : "Definir data", null, () => alternaForm("inicio", () => {
+      const fm = form(iac, true), dt = campo(fm, "data", "Data prevista", "date", ini || ""), a2 = el("div", "acoes"); fm.append(a2);
+      a2.append(btn("Salvar", "pri", () => { if (dt.value === (ini || "")) { fecharForm(fm); return; } gravar({ acao: "inicio", data: dt.value }, { acao: "inicio", data: ini || "" }); }), btn("Cancelar", null, () => fecharForm(fm)));
+      return fm;
+    })));
+
+    // Linha do tempo das fases (com a data de início, cada mês ganha o nome do mês de verdade)
     const fb = $("fases"); fb.textContent = ""; $("fasesBox").hidden = !fases.length;
+    const fh = $("fasesBox").querySelector("h2"); if (!fh.querySelector(".ajuda")) fh.append(ajuda(AJUDA.fases));
+    $("fasesSub").textContent = ini ? `a partir de ${dataBR(ini)}` : "mês a mês";
     const n = Math.max(6, ...fases.map((e) => fase(e.quando)[1])); fb.style.setProperty("--n", n);
-    const eixo = el("div", "eixo"); eixo.append(el("span", "lb")); for (let i = 1; i <= n; i++) eixo.append(el("span", null, "Mês " + i)); fb.append(eixo);
+    const eixo = el("div", "eixo"); eixo.append(el("span", "lb"));
+    for (let i = 1; i <= n; i++) { const s = el("span", null, "Mês " + i); if (ini) { const [y, m] = ini.split("-").map(Number), x = new Date(y, m - 2 + i, 1); s.append(el("br"), document.createTextNode(`${MESES[x.getMonth()]}/${String(x.getFullYear()).slice(2)}`)); } eixo.append(s); }
+    fb.append(eixo);
     for (const e of fases) {
       const [a, b] = fase(e.quando), row = el("div", "fase"), bar = el("div", "bar", a === b ? `Mês ${a}` : `Mês ${a}–${b}`);
       bar.style.gridColumn = `${a + 1} / ${b + 2}`; row.append(el("span", "lb", e.texto), bar); fb.append(row);
     }
 
-    // Sem data, na ordem da planilha (ordem = prioridade)
-    const ul = $("entregas"); ul.textContent = ""; $("nE").textContent = resto.length + " itens";
-    for (const e of resto) { const li = el("li"); li.append(el("span", null, e.texto), el("span", "q", e.quando)); ul.append(li); }
     const ui = $("ideias"); ui.textContent = ""; $("nI").textContent = DADOS.plano.ideias.length + "";
     for (const t of DADOS.plano.ideias) ui.append(el("li", null, t));
     dobra($("ideiasBox"), "ideias");
   }
 
   let pagina = "inicio";
-  for (const b of document.querySelectorAll("nav.bottom button")) b.onclick = () => { pagina = b.dataset.ir; render(); window.scrollTo(0, 0); };
+  for (const b of document.querySelectorAll("nav.bottom button")) b.onclick = () => { pagina = b.dataset.ir; adiado = false; render(); window.scrollTo(0, 0); };
 
   function render() {
     for (const s of document.querySelectorAll("[data-pagina]")) s.hidden = s.dataset.pagina !== pagina;
@@ -623,12 +988,16 @@ details[open] > summary .seta { transform: rotate(-135deg) translate(-2px, 0); }
     pills();
     if (pagina === "inicio") renderInicio(); else if (pagina === "pecas") renderPecas(); else renderPlano();
   }
+  // "?" nos blocos que já vêm prontos no HTML
+  $("grafico").parentNode.querySelector("h2").append(ajuda(AJUDA.grafico));
+  $("rank").parentNode.querySelector("h2").append(ajuda(AJUDA.rank));
   render();
   let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { if (pagina === "inicio") renderGrafico(); }, 200); }); // gráfico acompanha a largura (girar o celular)
   // busca a planilha de novo a cada 30 segundos (lançou na planilha, aparece aqui)
-  const buscar = () => fetch(URL_DADOS, { credentials: "omit" }).then((r) => r.json())
-    .then((d) => { if (d.erro) throw new Error(d.erro); usar(d); render(); })
-    .catch((e) => { $("sub").textContent = "Não atualizou: " + (e && e.message || e) + " (tenta de novo em 30 s)"; });
+  const buscar = () => { const v = versao, chegouSeAtual = (d) => { if (v === versao) chegou(d); };
+    fetch(URL_DADOS, { credentials: "omit" }).then((r) => r.json())
+    .then((d) => { if (d.erro) throw new Error(d.erro); chegouSeAtual(d); })
+    .catch((e) => { $("sub").textContent = "Não atualizou: " + (e && e.message || e) + " (tenta de novo em 30 s)"; }); };
   setInterval(buscar, 30000);
   document.addEventListener("visibilitychange", () => { if (!document.hidden) buscar(); }); // aba voltou para a frente: busca na hora
 })();
